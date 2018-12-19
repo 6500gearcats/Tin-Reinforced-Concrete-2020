@@ -1,4 +1,4 @@
-package org.usfirst.frc.team6500.trc.sensors;
+package org.usfirst.frc.team6500.trc.wrappers.sensors;
 
 public class TRCEncoderSet
 {

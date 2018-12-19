@@ -1,6 +1,6 @@
-package org.usfirst.frc.team6500.trc.sensors;
+package org.usfirst.frc.team6500.trc.wrappers.sensors;
 
-import org.usfirst.frc.team6500.trc.TRCTypes;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.GyroType;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj.I2C;
 public class TRCGyro extends GyroBase
 {
 	private Object installedGyro;
-	private TRCTypes.gyroType internalGyroType;
+	private GyroType internalGyroType;
 	
 	/**
 	 * A gyro which provides a uniform way to use any possible type of gyro on the robot without extra classes
 	 * 
 	 * @param gyroType Which type of gyro to use
 	 */
-	public TRCGyro (TRCTypes.gyroType gyroType)
+	public TRCGyro (GyroType gyroType)
 	{
 		internalGyroType = gyroType;
 		
@@ -61,7 +61,7 @@ public class TRCGyro extends GyroBase
 	public double getAngle() {
 		try
 		{
-			if (this.internalGyroType != TRCTypes.gyroType.NavX)
+			if (this.internalGyroType != GyroType.NavX)
 			{
 				return ((GyroBase) installedGyro).getAngle() % 360;
 			}
@@ -85,7 +85,7 @@ public class TRCGyro extends GyroBase
 	public double getRate() {
 		try
 		{
-			if (this.internalGyroType != TRCTypes.gyroType.NavX)
+			if (this.internalGyroType != GyroType.NavX)
 			{
 				return ((GyroBase) installedGyro).getRate();
 			}
@@ -107,7 +107,7 @@ public class TRCGyro extends GyroBase
 	public void reset() {
 		try
 		{
-			if (this.internalGyroType != TRCTypes.gyroType.NavX)
+			if (this.internalGyroType != GyroType.NavX)
 			{
 				((GyroBase) installedGyro).reset();
 			}

@@ -2,19 +2,30 @@ package org.usfirst.frc.team6500.trc.systems;
 
 import java.util.HashMap;
 
+import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
+
 import edu.wpi.first.wpilibj.Joystick;
 
 public class TRCDriveInput
 {
 	private static HashMap<Integer, Joystick> inputSticks;
 	private static HashMap<Integer, HashMap<Integer, Runnable>> buttonFuncs; //oh god why does this work
+	private static double baseSpeed = 0.0;
 	
-	public static void initializeDriveInput(int[] ports)
+	/**
+	 * Setup the DriveInput class.  Do this before using any other methods in this class.
+	 * 
+	 * @param ports The ids of the USB ports the joysticks are plugged in to
+	 * @param bspeed The default max speed of the robot
+	 */
+	public static void initializeDriveInput(int[] ports, double bspeed)
 	{
 		for (int port : ports)
 		{
 			inputSticks.put(port, new Joystick(port));
 		}
+		
+		baseSpeed = bspeed;
 	}
 	
 	/**
@@ -47,8 +58,73 @@ public class TRCDriveInput
 		}
 	}
 	
-	public static void getButton(int joystickPort, int button)
+	/**
+	 * Get whether a certain button on a certain joystick is currently being pressed
+	 * 
+	 * @param joystickPort What joystick to check the button on
+	 * @param button Number of button to check
+	 * @return True if button on joystick is pressed, false otherwise
+	 */
+	public static boolean getButton(int joystickPort, int button)
 	{
+		return inputSticks.get(joystickPort).getRawButton(button);
+	}
+	
+	/**
+	 * Get the POV (D-Pad or thumbstick) position from a joystick
+	 * 
+	 * @param joystickPort What joystick to check the POV on
+	 * @return The position, in degrees, of the POV
+	 */
+	public static int getPOV(int joystickPort, int button)
+	{
+		return inputSticks.get(joystickPort).getPOV();
+	}
+	
+	/**
+	 * Calculates the value of the throttle in a manner which makes the number much more sensible
+	 * 
+	 * @param joystick The joystick get throttle value from
+	 * @return The simplified throttle value
+	 */
+	public static double getThrottle(int joystickPort) {
+		double multiplier;
 		
+		multiplier = getRawThrottle(joystickPort) + 1;  // Range is -1 to 1, change to 0 to 2 cuz its easier to work with
+		multiplier = multiplier / 2;                    // Reduce to a scale between 0 to 1
+		multiplier = 1 - multiplier;                    // Throttle is backwards from expectation, flip it
+		multiplier = multiplier * baseSpeed;            // Mix in some of that sweet default
+		
+		return multiplier;
+	}
+	
+	/**
+	 * Get the raw value of a joystick's throttle
+	 * This value is kinda hard to work with, so use getThrottle for a better version
+	 * 
+	 * @param joystickPort
+	 * @return The value from the throttle which is returned by default
+	 */
+	public static double getRawThrottle(int joystickPort)
+	{
+		return inputSticks.get(joystickPort).getThrottle();
+	}
+	
+	/**
+	 * Get a TRCDriveParams which has all the values from joystick joystickPort for use in driving the robot
+	 * 
+	 * @param joystickPort What joystick to get values from
+	 * @return TRCDriveParams which have been set from values from the joystick joystickPort
+	 */
+	public static TRCDriveParams getStickDriveParams(int joystickPort)
+	{
+		TRCDriveParams drivepars = new TRCDriveParams();
+		
+		drivepars.setRawX(inputSticks.get(joystickPort).getX());
+		drivepars.setRawY(inputSticks.get(joystickPort).getY());
+		drivepars.setRawZ(inputSticks.get(joystickPort).getZ());
+		drivepars.setM(getThrottle(joystickPort));
+		
+		return drivepars;
 	}
 }

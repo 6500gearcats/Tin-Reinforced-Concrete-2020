@@ -1,4 +1,4 @@
-package org.usfirst.frc.team6500.trc;
+package org.usfirst.frc.team6500.trc.util;
 
 /**
  * Class which filters any inputs by averaging them with their previous value to prevent sharp increases in acceleration,
