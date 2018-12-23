@@ -13,6 +13,11 @@ public class TRCMecanumDrive extends MecanumDrive
 	// Keeps track of whether we want the x and y to be swapped; this exists because the joystick and drive classes have
 	// differing default parameter placement for x and y and it can get very confusing 
 	private boolean xyswap;
+	// Can't access these from the superclass so we have to keep track of them ourselves
+	private final SpeedController frontLeftMotor;
+	private final SpeedController rearLeftMotor;
+	private final SpeedController frontRightMotor;
+	private final SpeedController rearRightMotor;
 
 	/**
 	 * Default constructor, same as superclass plus setting xyswap to off by default.
@@ -21,6 +26,11 @@ public class TRCMecanumDrive extends MecanumDrive
 	{
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
 		this.xyswap = false;
+		
+		this.frontLeftMotor = frontLeftMotor;
+		this.rearLeftMotor = rearLeftMotor;
+		this.frontRightMotor = frontRightMotor;
+		this.rearRightMotor = rearRightMotor;
 	}
 	
 	/**
@@ -32,6 +42,11 @@ public class TRCMecanumDrive extends MecanumDrive
 	{
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
 		this.xyswap = swapxy;
+		
+		this.frontLeftMotor = frontLeftMotor;
+		this.rearLeftMotor = rearLeftMotor;
+		this.frontRightMotor = frontRightMotor;
+		this.rearRightMotor = rearRightMotor;
 	}
 	
 	
@@ -58,6 +73,33 @@ public class TRCMecanumDrive extends MecanumDrive
 		else
 		{
 			super.driveCartesian(ySpeed, xSpeed, zRotation);
+		}
+	}
+	
+	/**
+	 * Drive an individual wheel of the drivetrain at a specific speed
+	 * 
+	 * @param wheel Which wheel to drive (one of kFrontLeft, kRearLeft, kFrontRight, or kRearRight)
+	 * @param power -1.0 to 1.0
+	 */
+	public void driveWheel(MotorType wheel, double power)
+	{
+		switch(wheel)
+		{
+		case kFrontLeft:
+			this.frontLeftMotor.set(power);
+			break;
+		case kRearLeft:
+			this.rearLeftMotor.set(power);
+			break;
+		case kFrontRight:
+			this.frontRightMotor.set(power);
+			break;
+		case kRearRight:
+			this.rearRightMotor.set(power);
+			break;
+		default:
+			break;
 		}
 	}
 	

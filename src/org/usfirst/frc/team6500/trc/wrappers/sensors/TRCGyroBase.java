@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.I2C;
 
-public class TRCGyro extends GyroBase
+public class TRCGyroBase extends GyroBase
 {
 	private Object installedGyro;
 	private GyroType internalGyroType;
@@ -18,7 +18,7 @@ public class TRCGyro extends GyroBase
 	 * 
 	 * @param gyroType Which type of gyro to use
 	 */
-	public TRCGyro (GyroType gyroType)
+	public TRCGyroBase (GyroType gyroType)
 	{
 		internalGyroType = gyroType;
 		
