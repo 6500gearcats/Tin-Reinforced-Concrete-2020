@@ -1,4 +1,4 @@
-package org.usfirst.frc.team6500.trc.wrappers.systems;
+package org.usfirst.frc.team6500.trc.systems;
 
 import java.util.HashMap;
 
@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 
-public class DirectionalSystem
+public class TRCDirectionalSystem
 {
 	private boolean invertSide;
 	private HashMap<Integer, SpeedController> outputMotors;
 	private double defaultForwardSpeed, defaultReverseSpeed;
 	
-	public DirectionalSystem(int[] motorPorts, SpeedControllerType[] motorTypes, boolean balanceInvert, double dFSpeed, double dRSpeed)
+	public TRCDirectionalSystem(int[] motorPorts, SpeedControllerType[] motorTypes, boolean balanceInvert, double dFSpeed, double dRSpeed)
 	{
 		for (int i = 0; i < motorPorts.length; i++)
 		{
