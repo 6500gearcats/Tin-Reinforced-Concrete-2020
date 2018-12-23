@@ -24,4 +24,31 @@ public class TRCTypes
 		XRotation,
 		ZRotation,
 	}
+	
+	public enum SpeedControllerType
+	{
+		DMC60,
+		Jaguar,
+		PWMTalonSRX,
+		PWMVictorSPX,
+		SD540,
+		Spark,
+		Talon,
+		Victor,
+		VictorSP,
+	}
+	
+	public enum Position
+	{
+		Left,
+		Middle,
+		Right,;
+		
+		public static boolean toBoolean(Position side)
+		{
+			if(side == Position.Left)       { return true;  }
+			else if(side == Position.Right) { return false; }
+			else                            { return false; }
+		}
+	}
 }
