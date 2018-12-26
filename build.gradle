@@ -1,0 +1,32 @@
+plugins {
+    id "java-library"
+    id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
+}
+
+version = "test"
+
+dependencies {
+    api wpilib()
+    implementation ctre()
+    implementation navx()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/org/usfirst/frc/team6500/trc'
+        }
+    }
+}
+
+wrapper {
+    gradleVersion = '4.9'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}
