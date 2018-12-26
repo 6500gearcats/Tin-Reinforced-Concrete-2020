@@ -1,4 +1,7 @@
 bin/
 build/
+repos/
 .gradle/
-.classpat
+.classpath
+.settings/
+.project
