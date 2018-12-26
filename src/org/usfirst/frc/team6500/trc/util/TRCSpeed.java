@@ -7,6 +7,7 @@ package org.usfirst.frc.team6500.trc.util;
  */
 public class TRCSpeed
 {
+	private static final double differenceDeadband = 0.05;
 	private double previousSpeed = 0.0;
 	
 	public double calculateSpeed(double raw, double multiplier)
@@ -15,12 +16,17 @@ public class TRCSpeed
 		
 		calculated *= multiplier;
 		
-		if (Math.abs(calculated - previousSpeed) > 0.1)
+		if (Math.abs(calculated - this.previousSpeed) > differenceDeadband)
 		{
-			calculated = (calculated + previousSpeed) / 2;
+			calculated = (calculated + this.previousSpeed) / 2;
 		}
 		
-		previousSpeed = calculated;
+		this.previousSpeed = calculated;
 		return calculated;
+	}
+
+	public void reset()
+	{
+		this.previousSpeed = 0.0;
 	}
 }
