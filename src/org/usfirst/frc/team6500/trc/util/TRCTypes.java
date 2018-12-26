@@ -38,6 +38,15 @@ public class TRCTypes
 		VictorSP,
 	}
 	
+	public enum DirectionalSystemActionType
+	{
+		Stop,
+		Forward,
+		Reverse,
+		FullForward,
+		FullReverse,
+	}
+	
 	public enum Position
 	{
 		Left,
