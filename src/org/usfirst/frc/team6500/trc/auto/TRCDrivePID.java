@@ -26,6 +26,14 @@ public class TRCDrivePID
     private static DriveType driveType;
     
 
+    /**
+     * Set up the necessary elements to be able to drive the robot in autonomous with a PID control loop for accurate distances and degrees
+     * 
+     * @param encoderset The robot's encoders
+     * @param gyroBase The robot's gyroscop
+     * @param driveBase The robot's drivetrain
+     * @param driveBaseType The type of the robot's drivetrain (one of {@link DriveType})
+     */
     public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, RobotDriveBase driveBase, DriveType driveBaseType)
     {
         encoders = encoderset;
@@ -40,6 +48,11 @@ public class TRCDrivePID
     }
 
 
+    /**
+     * Drive the robot forward inches
+     * 
+     * @param inches How many inches to drive
+     */
     public static void driveForward(double inches)
     {
         autoSpeed.reset();
@@ -76,6 +89,11 @@ public class TRCDrivePID
         }
     }
 
+    /**
+     * Rotate the robot degrees degrees
+     * 
+     * @param degrees How many degrees the robot should rotate
+     */
     public static void driveRotation(int degrees)
     {
         autoSpeed.reset();

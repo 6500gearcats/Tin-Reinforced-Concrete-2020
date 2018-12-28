@@ -11,6 +11,13 @@ public class TRCDirectionalSystemAction extends Thread
 	private DirectionalSystemActionType type;
 	private double delay;
 	
+	/**
+	 * Have actionSystem execute action for time seconds, threaded, when the start() method is called
+	 * 
+	 * @param actionSystem The system to have the action execute for
+	 * @param action What action the system should take, one of {@link DirectionalSystemActionType}
+	 * @param time How many seconds the action should be executed for
+	 */
 	public TRCDirectionalSystemAction(TRCDirectionalSystem actionSystem, DirectionalSystemActionType action, double time)
 	{
 		this.system = actionSystem;
@@ -18,6 +25,9 @@ public class TRCDirectionalSystemAction extends Thread
 		this.delay = time;
 	}
 	
+	/**
+	 * Method run to do the action.  DO NOT call this directly, instead use .start()
+	 */
 	@Override
 	public void run()
 	{
