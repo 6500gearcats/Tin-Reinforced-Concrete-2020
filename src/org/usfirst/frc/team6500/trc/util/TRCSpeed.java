@@ -10,6 +10,14 @@ public class TRCSpeed
 	private static final double differenceDeadband = 0.05;
 	private double previousSpeed = 0.0;
 	
+	/**
+	 * Calculate a new speed value from the raw value and multiplier, taking into account the distance from the previous
+	 * values to reduce jerk
+	 * 
+	 * @param raw The raw speed value from the source
+	 * @param multiplier The value to multiply the raw value by before doing other calculations; if not using this for drivetrain functions use the version without it
+	 * @return Smoothed speed value, equivalent to (previousSpeed + (raw * multiplier)) / 2
+	 */
 	public double calculateSpeed(double raw, double multiplier)
 	{
 		double calculated = raw;
@@ -25,6 +33,22 @@ public class TRCSpeed
 		return calculated;
 	}
 
+	/**
+	 * Calculate a new speed value from the raw value, taking into account the distance from the previous values to
+	 * reduce jerk
+	 * 
+	 * @param raw The raw speed value from the source
+	 * @return Smoothed speed value, equivalent to (previousSpeed + raw) / 2
+	 */
+	public double calculateSpeed(double raw)
+	{
+		return this.calculateSpeed(raw, 1.0);
+	}
+
+	/**
+	 * Resets the recorded previous speed from calculations.  In systems where operation is not entirely continous,
+	 * use this whenever a new interval of operation is about to begin.
+	 */
 	public void reset()
 	{
 		this.previousSpeed = 0.0;

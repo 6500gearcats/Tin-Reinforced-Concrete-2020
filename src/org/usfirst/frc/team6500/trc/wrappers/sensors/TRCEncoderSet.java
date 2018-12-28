@@ -77,6 +77,23 @@ public class TRCEncoderSet
 		
 		return distancesum / this.internalEncoders.length;
 	}
+
+	/**
+	 * Gives the average absolute distance all encoders have traveled; useful for measuring rotation
+	 * 
+	 * @return The average of the absolute distances traveled by all the encoders
+	 */
+	public double getAverageAbsoluteDistanceTraveled()
+	{
+		double distancesum = 0.0;
+		
+		for (TRCEncoder encoder : this.internalEncoders)
+		{
+			distancesum += Math.abs(encoder.getDistance());
+		}
+		
+		return distancesum / this.internalEncoders.length;
+	}
 	
 	/**
 	 * Get the distance traveled by an individual encoder

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 
 public class TRCDrivePID
 {
-    private static final double deadband = 0.5;
+    private static final double deadband = 2.0;
     private static final int verificationMin = 100;
 
     private static TRCEncoderSet encoders;
