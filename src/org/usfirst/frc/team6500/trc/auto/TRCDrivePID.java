@@ -36,7 +36,7 @@ public class TRCDrivePID extends Thread
      * @param gyroBase The robot's gyroscop
      * @param driveBase The robot's drivetrain
      * @param driveBaseType The type of the robot's drivetrain (one of {@link DriveType})
-     * @param driveAction The type of action the robot should take
+     * @param driveAction The type of action the robot should take (one of {@link DriveActionType})
      * @param unit The inches/degrees of the action
      */
     public TRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, RobotDriveBase driveBase, DriveType driveBaseType, DriveActionType driveAction, double unit)
@@ -54,6 +54,9 @@ public class TRCDrivePID extends Thread
         MPID = new MiniPID(1.0, 0.0, 0.0);
     }
 
+    /**
+     * Call .start(), not this b/c Thread stuffs
+     */
     @Override
     public void run()
     {
