@@ -51,6 +51,14 @@ public class TRCTypes
 		FullForward,
 		FullReverse,
 	}
+
+	// Types of actions a drivetrain can execute in autonomous
+	public enum DriveActionType
+	{
+		Forward,
+		Right,
+		Rotate,
+	}
 	
 	// Positions a robot can start in at the beginning of a match
 	public enum Position
