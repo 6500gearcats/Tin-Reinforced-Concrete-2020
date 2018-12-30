@@ -2,7 +2,9 @@ package org.usfirst.frc.team6500.trc.systems;
 
 import java.util.HashMap;
 
+import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.Jaguar;
@@ -79,6 +81,13 @@ public class TRCDirectionalSystem
 		this.invertSide = balanceInvert;
 		this.defaultForwardSpeed = dFSpeed;
 		this.defaultReverseSpeed = dRSpeed;
+
+		TRCNetworkData.logString(VerbosityType.Log_Info, "DirectionalSystem created");
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "Connected to motors on ports");
+		for (int i = 0; i < motorPorts.length; i++)
+		{
+			TRCNetworkData.logString(VerbosityType.Log_Debug, Integer.toString(motorPorts[i]));
+		}
 	}
 	
 	/**

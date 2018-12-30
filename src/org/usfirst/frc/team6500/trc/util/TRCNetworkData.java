@@ -1,6 +1,7 @@
 package org.usfirst.frc.team6500.trc.util;
 
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DataInterfaceType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -22,6 +23,8 @@ public class TRCNetworkData
     
     private static HashMap<Integer, SendableChooser<Integer>> options;
     private static HashMap<String, NetworkTableEntry> dataPoints;
+
+    private static int vOptionsID;
 
 
     /**
@@ -48,21 +51,48 @@ public class TRCNetworkData
         }
 
         logEntry = table.getEntry("log");
-        logEntry.setString("NetworkData Initialized.");
+        logEntry.setString("Logging Initialized.");
+
+        String verbosityOptions[] = new String[3];
+        verbosityOptions[0] = "Debug (All Messages)";
+        verbosityOptions[1] = "Info. (Limited Messages)";
+        verbosityOptions[2] = "Error (Critical Messages)";
+        vOptionsID = putOptions(verbosityOptions);
+    }
+
+    public static VerbosityType getVerbosity()
+    {
+        switch (getSelection(vOptionsID))
+        {
+            case 0:
+                return VerbosityType.Log_Debug;
+            case 1:
+                return VerbosityType.Log_Info;
+            case 2:
+                return VerbosityType.Log_Error;
+            default:
+                return null;
+        }
     }
 
     /**
      * Add another line to the log entry, deleting the oldest line if there are too many.
      * 
+     * @param v At what level of informationality the line should be displayed
      * @param logData Line to add the log
      */
-    public static void logString(String logData)
+    public static void logString(VerbosityType v, String logData)
     {
+        if (getVerbosity().ordinal() > v.ordinal())
+        {
+            return;
+        }
+
         String oldLog = logEntry.getString("");
 
         if (oldLog == "")
         {
-            System.out.println("ERROR: NetworkTable has broken.  Something has gone critically wrong with networking.");
+            System.out.println("ERROR: NetworkTable Server has broken.  Something has gone critically wrong with networking.");
             return;
         }
 

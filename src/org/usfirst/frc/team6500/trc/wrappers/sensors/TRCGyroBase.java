@@ -1,6 +1,8 @@
 package org.usfirst.frc.team6500.trc.wrappers.sensors;
 
+import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.GyroType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -34,6 +36,9 @@ public class TRCGyroBase extends GyroBase
 			default:
 				break;
 		}
+
+		TRCNetworkData.createDataPoint("Gyro " + this.toString());
+		TRCNetworkData.logString(VerbosityType.Log_Info, "Gyro " + this.toString() + " is online.");
 	}
 
 	
@@ -45,6 +50,7 @@ public class TRCGyroBase extends GyroBase
 		try
 		{
 			((GyroBase) installedGyro).calibrate();
+			TRCNetworkData.logString(VerbosityType.Log_Debug, "Gyro " + this.toString() + " is calibrated.");
 		}
 		catch (Exception e)
 		{
@@ -63,15 +69,18 @@ public class TRCGyroBase extends GyroBase
 		{
 			if (this.internalGyroType != GyroType.NavX)
 			{
+				TRCNetworkData.updateDataPoint("Gyro " + this.toString(), ((GyroBase) installedGyro).getAngle() % 360);
 				return ((GyroBase) installedGyro).getAngle() % 360;
 			}
 			else
 			{
+				TRCNetworkData.updateDataPoint("Gyro " + this.toString(), ((AHRS) installedGyro).getAngle() % 360);
 				return ((AHRS) installedGyro).getAngle() % 360;
 			}
 		}
 		catch (Exception e)
 		{
+			TRCNetworkData.updateDataPoint("Gyro " + this.toString(), 0);
 			return 0;
 		}
 	}
@@ -116,6 +125,7 @@ public class TRCGyroBase extends GyroBase
 				((AHRS) installedGyro).reset();
 				((AHRS) installedGyro).zeroYaw();
 			}
+			TRCNetworkData.logString(VerbosityType.Log_Debug, "Gyro " + this.toString() + " is reset.");
 		}
 		catch (Exception e)
 		{

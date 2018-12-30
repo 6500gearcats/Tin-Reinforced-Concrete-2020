@@ -60,10 +60,19 @@ public class TRCTypes
 		Rotate,
 	}
 
+	// Types of ways data can be sent to the driver station from the rio
 	public enum DataInterfaceType
 	{
 		NetworkTables,  // Only NetworkTables
 		Board,          // SmartDashboard or ShuffleBoard
+	}
+
+	// Types of verbosity for logging output
+	public enum VerbosityType
+	{
+		Log_Debug,
+		Log_Info,
+		Log_Error,
 	}
 	
 	// Positions a robot can start in at the beginning of a match

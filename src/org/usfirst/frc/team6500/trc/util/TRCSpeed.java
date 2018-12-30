@@ -1,5 +1,7 @@
 package org.usfirst.frc.team6500.trc.util;
 
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
+
 /**
  * Class which filters any inputs by averaging them with their previous value to prevent sharp increases in acceleration,
  * to maintain low jerk so components do not slip or tip. Pass all drive power outputs through an instance of this class,
@@ -52,5 +54,6 @@ public class TRCSpeed
 	public void reset()
 	{
 		this.previousSpeed = 0.0;
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "Speed object [" + this.toString() + "]'s calculations have been reset.");
 	}
 }

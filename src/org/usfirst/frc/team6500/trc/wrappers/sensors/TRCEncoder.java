@@ -1,5 +1,7 @@
 package org.usfirst.frc.team6500.trc.wrappers.sensors;
 
+import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
+
 import edu.wpi.first.wpilibj.*;
 
 public class TRCEncoder
@@ -81,6 +83,8 @@ public class TRCEncoder
 		{
 			this.internalEncoder.setDistancePerPulse(this.distancePerPulse);
 		}
+
+		TRCNetworkData.createDataPoint("Encoder " + this.internalEncoder.toString());
 	}
 	
 	/**
@@ -109,6 +113,7 @@ public class TRCEncoder
 	 */
 	public double getDistance()
 	{
+		TRCNetworkData.updateDataPoint("Encoder " + this.internalEncoder.toString(), this.internalEncoder.getDistance());
 		return this.internalEncoder.getDistance();
 	}
 	

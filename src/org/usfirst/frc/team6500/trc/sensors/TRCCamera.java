@@ -1,6 +1,10 @@
 package org.usfirst.frc.team6500.trc.sensors;
 
 import edu.wpi.first.wpilibj.CameraServer;
+
+import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
+
 import edu.wpi.cscore.UsbCamera;
 
 /**
@@ -26,6 +30,7 @@ public class TRCCamera
         camera.setResolution(width, height);
         camera.setExposureAuto();
         camera.setWhiteBalanceAuto();
+        TRCNetworkData.logString(VerbosityType.Log_Info, "Camera Sensor is online.");
     }
 
     /**
@@ -35,5 +40,6 @@ public class TRCCamera
     {
         camera.setExposureAuto();
         camera.setWhiteBalanceAuto();
+        TRCNetworkData.logString(VerbosityType.Log_Debug, "Camera recalibrated.");
     }
 }

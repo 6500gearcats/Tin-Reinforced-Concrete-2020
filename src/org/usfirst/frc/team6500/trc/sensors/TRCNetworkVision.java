@@ -2,6 +2,10 @@ package org.usfirst.frc.team6500.trc.sensors;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
+import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
+
 import edu.wpi.first.networktables.NetworkTable;
 
 /**
@@ -21,6 +25,8 @@ public class TRCNetworkVision
 		tableServer.startServer();
 		
 		table = tableServer.getTable("/vision");
+
+		TRCNetworkData.logString(VerbosityType.Log_Info, "NetworkVision is online.");
 	}
 	
 	/**

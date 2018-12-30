@@ -3,6 +3,8 @@ package org.usfirst.frc.team6500.trc.systems;
 import java.util.HashMap;
 
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
+import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -26,6 +28,7 @@ public class TRCDriveInput
 		}
 		
 		baseSpeed = bspeed;
+		TRCNetworkData.logString(VerbosityType.Log_Info, "Driver Input is online.");
 	}
 	
 	/**
@@ -38,6 +41,7 @@ public class TRCDriveInput
 	public static void bindButton(int joystickPort, int button, Runnable func)
 	{
 		buttonFuncs.get(joystickPort).put(button, func);
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "A binding has been created for Button " + button + " on Joystick " + joystickPort);
 	}
 	
 	/**

@@ -1,5 +1,8 @@
 package org.usfirst.frc.team6500.trc.wrappers.sensors;
 
+import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
+
 public class TRCEncoderSet
 {
 	private int[] ports;
@@ -37,6 +40,8 @@ public class TRCEncoderSet
 				this.internalEncoders[wheel] = new TRCEncoder(encoderPorts, this.distancePerPulse, false, this.lowresolution);
 			}
 		}
+
+		TRCNetworkData.createDataPoint("EncoderSet " + this.toString());
 	}
 	
 	
@@ -49,6 +54,7 @@ public class TRCEncoderSet
 		{
 			encoder.reset();
 		}
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been reset");
 	}
 	
 	/**
@@ -75,6 +81,7 @@ public class TRCEncoderSet
 			distancesum += encoder.getDistance();
 		}
 		
+		TRCNetworkData.updateDataPoint("EncoderSet " + this.toString(), distancesum / this.internalEncoders.length);
 		return distancesum / this.internalEncoders.length;
 	}
 
@@ -92,6 +99,7 @@ public class TRCEncoderSet
 			distancesum += Math.abs(encoder.getDistance());
 		}
 		
+		TRCNetworkData.updateDataPoint("EncoderSet " + this.toString(), distancesum / this.internalEncoders.length);
 		return distancesum / this.internalEncoders.length;
 	}
 	
@@ -117,5 +125,7 @@ public class TRCEncoderSet
 		{
 			encoder.setDistancePerPulse(encoder.getDistancePerPulse() * averageDistanceTraveled / encoder.getDistance());
 		}
+
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been calibrated");
 	}
 }
