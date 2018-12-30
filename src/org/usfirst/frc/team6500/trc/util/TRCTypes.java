@@ -59,6 +59,12 @@ public class TRCTypes
 		Right,
 		Rotate,
 	}
+
+	public enum DataInterfaceType
+	{
+		NetworkTables,  // Only NetworkTables
+		Board,          // SmartDashboard or ShuffleBoard
+	}
 	
 	// Positions a robot can start in at the beginning of a match
 	public enum Position
