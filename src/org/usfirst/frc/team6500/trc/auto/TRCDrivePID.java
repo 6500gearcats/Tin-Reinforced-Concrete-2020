@@ -11,7 +11,7 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.DriveType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.drive.RobotDriveBase;
+
 
 public class TRCDrivePID extends Thread
 {

@@ -4,7 +4,6 @@ import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
 
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
