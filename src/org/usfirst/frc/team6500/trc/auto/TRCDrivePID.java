@@ -13,7 +13,7 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 import edu.wpi.first.wpilibj.RobotState;
 
 
-public class TRCDrivePID extends Thread
+public class TRCDrivePID
 {
     private static final double deadband = 2.0;
     private static final int verificationMin = 100;
@@ -23,13 +23,14 @@ public class TRCDrivePID extends Thread
     private static Object drive;
 
     private static boolean driving;
+    private static double maxSpeed = 0.0;
     private static DriveType driveType;
 
-    private MiniPID MPID;
-    private TRCSpeed autoSpeed;
+    private static MiniPID MPID;
+    private static TRCSpeed autoSpeed;
 
-    private DriveActionType actionType;
-    private double measurement;
+    private static DriveActionType actionType;
+    private static double measurement;
 
 
     /**
@@ -39,8 +40,9 @@ public class TRCDrivePID extends Thread
      * @param gyroBase The robot's primary gyro
      * @param driveBase The robot's drivetrain
      * @param driveBaseType The type of the robot's drivetrain {@link DriveType}
+     * @param maxSpeed Fastest speed the robot should go in autonomous
      */
-    public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, Object driveBase, DriveType driveBaseType)
+    public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, Object driveBase, DriveType driveBaseType, double maxSpeed)
     {
         encoders = encoderset;
         gyro = gyroBase;
@@ -54,37 +56,30 @@ public class TRCDrivePID extends Thread
     }
 
     /**
-     * Prepare a thread to be used that will do driveAction for unit inches/degrees
+     * Executes the specific action
      * 
      * @param driveAction The type of action the robot should take (one of {@link DriveActionType})
      * @param unit The inches/degrees of the action
      */
-    public TRCDrivePID(DriveActionType driveAction, double unit)
+    public void run(DriveActionType driveAction, double unit)
     {
         driving = false;
-        this.actionType = driveAction;
-        this.measurement = unit;
+        actionType = driveAction;
+        measurement = unit;
 
-        this.autoSpeed = new TRCSpeed();
-        this.MPID = new MiniPID(1.0, 0.0, 0.0);
-    }
+        autoSpeed = new TRCSpeed();
+        MPID = new MiniPID(1.0, 0.0, 0.0);
 
-    /**
-     * Call .start(), not this, b/c Thread stuffs
-     */
-    @Override
-    public void run()
-    {
-        switch(this.actionType)
+        switch(actionType)
         {
             case Forward:
-                this.driveForward();
+                driveForward();
                 break;
             case Right:
-                this.driveRight();
+                driveRight();
                 break;
             case Rotate:
-                this.driveRotation();
+                driveRotation();
                 break;
             default:
                 break;
@@ -97,11 +92,11 @@ public class TRCDrivePID extends Thread
      */
     public void driveForward()
     {
-        this.autoSpeed.reset();
-        this.MPID.reset();
-        this.MPID.setSetpoint(this.measurement);
-        TRCNetworkData.updateDataPoint("PIDSetpoint", this.measurement);
-        this.MPID.setOutputLimits(-1.0, 1.0);
+        autoSpeed.reset();
+        MPID.reset();
+        MPID.setSetpoint(measurement);
+        TRCNetworkData.updateDataPoint("PIDSetpoint", measurement);
+        MPID.setOutputLimits(-maxSpeed, maxSpeed);
 
         if (!driving)
         {
@@ -110,9 +105,9 @@ public class TRCDrivePID extends Thread
 
             while (deadbandcounter < verificationMin && RobotState.isAutonomous())
             {
-                double newSpeed = this.MPID.getOutput(encoders.getAverageDistanceTraveled());
+                double newSpeed = MPID.getOutput(encoders.getAverageDistanceTraveled());
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
-                double smoothedSpeed = this.autoSpeed.calculateSpeed(newSpeed, 1.0);
+                double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);
                 TRCNetworkData.updateDataPoint("PIDOutputSmoothed", smoothedSpeed);
 
                 if (driveType == DriveType.Mecanum)
@@ -124,7 +119,7 @@ public class TRCDrivePID extends Thread
                     ((TRCDifferentialDrive) drive).arcadeDrive(smoothedSpeed, 0.0, false);
                 }
 
-                if (Math.abs(encoders.getAverageDistanceTraveled() - this.measurement) < deadband)
+                if (Math.abs(encoders.getAverageDistanceTraveled() - measurement) < deadband)
                 {
                     deadbandcounter++;
                 }
@@ -141,20 +136,20 @@ public class TRCDrivePID extends Thread
     {
         if (!driving)
         {
-            this.autoSpeed.reset();
-            this.MPID.reset();
-            this.MPID.setSetpoint(this.measurement);
-            TRCNetworkData.updateDataPoint("PIDSetpoint", this.measurement);
-            this.MPID.setOutputLimits(-1.0, 1.0);
+            autoSpeed.reset();
+            MPID.reset();
+            MPID.setSetpoint(measurement);
+            TRCNetworkData.updateDataPoint("PIDSetpoint", measurement);
+            MPID.setOutputLimits(-maxSpeed, maxSpeed);
 
             driving = true;
             int deadbandcounter = 0;
 
             while (deadbandcounter < verificationMin && RobotState.isAutonomous())
             {
-                double newSpeed = this.MPID.getOutput(encoders.getAverageDistanceTraveled());
+                double newSpeed = MPID.getOutput(encoders.getAverageDistanceTraveled());
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
-                double smoothedSpeed = this.autoSpeed.calculateSpeed(newSpeed, 1.0);
+                double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);
                 TRCNetworkData.updateDataPoint("PIDOutputSmoothed", smoothedSpeed);
 
                 if (driveType == DriveType.Mecanum)
@@ -162,7 +157,7 @@ public class TRCDrivePID extends Thread
                     ((TRCMecanumDrive) drive).driveCartesian(smoothedSpeed, 0.0, 0.0);
                 }
 
-                if (Math.abs(encoders.getAverageDistanceTraveled() - this.measurement) < deadband)
+                if (Math.abs(encoders.getAverageDistanceTraveled() - measurement) < deadband)
                 {
                     deadbandcounter++;
                 }
@@ -179,20 +174,20 @@ public class TRCDrivePID extends Thread
     {
         if (!driving)
         {
-            this.autoSpeed.reset();
-            this.MPID.reset();
-            this.MPID.setSetpoint(this.measurement);
-            TRCNetworkData.updateDataPoint("PIDSetpoint", this.measurement);
-            this.MPID.setOutputLimits(-0.5, 0.5);
+            autoSpeed.reset();
+            MPID.reset();
+            MPID.setSetpoint(measurement);
+            TRCNetworkData.updateDataPoint("PIDSetpoint", measurement);
+            MPID.setOutputLimits(-maxSpeed, maxSpeed);
 
             driving = true;
             int deadbandcounter = 0;
 
             while (deadbandcounter < verificationMin && RobotState.isAutonomous())
             {
-                double newSpeed = this.MPID.getOutput(gyro.getAngle());
+                double newSpeed = MPID.getOutput(gyro.getAngle());
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
-                double smoothedSpeed = this.autoSpeed.calculateSpeed(newSpeed, 1.0);
+                double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);
                 TRCNetworkData.updateDataPoint("PIDOutputSmoothed", smoothedSpeed);
 
                 if (driveType == DriveType.Mecanum)
@@ -204,7 +199,7 @@ public class TRCDrivePID extends Thread
                     ((TRCDifferentialDrive) drive).arcadeDrive(0.0, smoothedSpeed, false);
                 }
 
-                if (Math.abs(gyro.getAngle() - this.measurement) < deadband)
+                if (Math.abs(gyro.getAngle() - measurement) < deadband)
                 {
                     deadbandcounter++;
                 }

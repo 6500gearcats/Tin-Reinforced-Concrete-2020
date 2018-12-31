@@ -11,23 +11,27 @@ import edu.wpi.first.wpilibj.Joystick;
 public class TRCDriveInput
 {
 	private static HashMap<Integer, Joystick> inputSticks;
-	private static HashMap<Integer, HashMap<Integer, Runnable>> buttonFuncs; //oh god why does this work
+    private static HashMap<Integer, HashMap<Integer, Runnable>> buttonFuncs; 
+    private static HashMap<Integer, HashMap<int[], Runnable>> absenceFuncs; // oh god why does this work
 	private static double baseSpeed = 0.0;
-	
+    private static double boostSpeed = 0.0;
+    
 	/**
 	 * Setup the DriveInput class.  Do this before using any other methods in this class.
 	 * 
 	 * @param ports The ids of the USB ports the joysticks are plugged in to
-	 * @param bspeed The default max speed of the robot
+	 * @param speedBase The default base speed of the robot
 	 */
-	public static void initializeDriveInput(int[] ports, double bspeed)
+	public static void initializeDriveInput(int[] ports, double speedBase, double speedBoost)
 	{
 		for (int port : ports)
 		{
 			inputSticks.put(port, new Joystick(port));
 		}
 		
-		baseSpeed = bspeed;
+        baseSpeed = speedBase;
+        boostSpeed = speedBoost;
+        
 		TRCNetworkData.logString(VerbosityType.Log_Info, "Driver Input is online.");
 	}
 	
@@ -42,6 +46,19 @@ public class TRCDriveInput
 	{
 		buttonFuncs.get(joystickPort).put(button, func);
 		TRCNetworkData.logString(VerbosityType.Log_Debug, "A binding has been created for Button " + button + " on Joystick " + joystickPort);
+    }
+    
+    /**
+	 * Assign a function to be run when a certain set of buttons on a certain joystick are not being pressed
+	 * 
+	 * @param joystickPort Joystick to bind to
+	 * @param buttons Buttons to bind to
+	 * @param func Function to be run
+	 */
+	public static void bindButtonAbsence(int joystickPort, int[] buttons, Runnable func)
+	{
+		absenceFuncs.get(joystickPort).put(buttons, func);
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "An absence binding has been created for " + buttons.length + "buttons on Joystick " + joystickPort);
 	}
 	
 	/**
@@ -58,7 +75,25 @@ public class TRCDriveInput
 				{
 					buttonFuncs.get(inputSticks.get(stickPort).getPort()).get(button).run();
 				}
-			}
+            }
+            
+            for (int[] buttonList : absenceFuncs.get(stickPort).keySet())
+            {
+                for (int i = 0; i < buttonList.length; i++)
+                {
+                    if (inputSticks.get(stickPort).getRawButton(buttonList[i]))
+                    {
+                        if (i == buttonList.length - 1)
+                        {
+                            absenceFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
+                            break;
+                        }
+                        continue;
+                    }
+                    
+                    break;
+                }
+            }
 		}
 	}
 	
@@ -94,10 +129,17 @@ public class TRCDriveInput
 	public static double getThrottle(int joystickPort) {
 		double multiplier;
 		
-		multiplier = getRawThrottle(joystickPort) + 1;  // Range is -1 to 1, change to 0 to 2 cuz its easier to work with
-		multiplier = multiplier / 2;                    // Reduce to a scale between 0 to 1
-		multiplier = 1 - multiplier;                    // Throttle is backwards from expectation, flip it
-		multiplier = multiplier * baseSpeed;            // Mix in some of that sweet default
+		multiplier = getRawThrottle(joystickPort) + 1;        // Range is -1 to 1, change to 0 to 2 cuz its easier to work with
+		multiplier = multiplier / 2;                          // Reduce to a scale between 0 to 1
+        multiplier = 1 - multiplier;                          // Throttle is backwards from expectation, flip it
+        if (!inputSticks.get(joystickPort).getRawButton(1))
+        {
+            multiplier = multiplier * baseSpeed;              // Mix in some of that sweet default...
+        }
+        else
+        {
+            multiplier = multiplier * boostSpeed;             // Unless the trigger is pressed, then mix in some of that sweet boost :)
+        }
 		
 		return multiplier;
 	}

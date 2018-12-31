@@ -3,7 +3,7 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
-version = "2019.0.0-alpha-1"
+version = "2019.0.0-alpha-2"
 
 dependencies {
     api wpilib()
