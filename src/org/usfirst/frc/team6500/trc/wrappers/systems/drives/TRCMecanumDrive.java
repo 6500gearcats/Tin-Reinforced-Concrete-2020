@@ -1,14 +1,28 @@
 package org.usfirst.frc.team6500.trc.wrappers.systems.drives;
 
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
+
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.drive.RobotDriveBase;
+import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.DMC60;
+import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.SD540;
+import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.VictorSP;
+
 
 /**
  * A wrapper on top of the standard MecanumDrive class, as the WPILib one has some odd behavior and so we can add features
  */
-public class TRCMecanumDrive extends MecanumDrive
+public class TRCMecanumDrive
 {
 	// Keeps track of whether we want the x and y to be swapped; this exists because the joystick and drive classes have
 	// differing default parameter placement for x and y and it can get very confusing 
@@ -17,36 +31,96 @@ public class TRCMecanumDrive extends MecanumDrive
 	private final SpeedController frontLeftMotor;
 	private final SpeedController rearLeftMotor;
 	private final SpeedController frontRightMotor;
-	private final SpeedController rearRightMotor;
+    private final SpeedController rearRightMotor;
+    
+    private MecanumDrive drive;
+
+
+    private SpeedController[] speedControllerCreate(int[] motorPorts, SpeedControllerType[] motorTypes)
+    {
+        SpeedController newControllers[] = new SpeedController[motorPorts.length];
+
+        for (int i = 0; i < motorPorts.length; i++)
+		{
+			SpeedController motor = null;
+			
+			switch(motorTypes[i])
+			{
+			case DMC60:
+				motor = new DMC60(motorPorts[i]);
+				break;
+			case Jaguar:
+				motor = new Jaguar(motorPorts[i]);
+				break;
+			case PWMTalonSRX:
+				motor = new PWMTalonSRX(motorPorts[i]);
+				break;
+			case PWMVictorSPX:
+				motor = new PWMVictorSPX(motorPorts[i]);
+				break;
+			case SD540:
+				motor = new SD540(motorPorts[i]);
+				break;
+			case Spark:
+				motor = new Spark(motorPorts[i]);
+				break;
+			case Talon:
+				motor = new Talon(motorPorts[i]);
+				break;
+			case Victor:
+				motor = new Victor(motorPorts[i]);
+				break;
+			case VictorSP:
+				motor = new VictorSP(motorPorts[i]);
+				break;
+			default:
+				motor = new Spark(motorPorts[i]);
+				break;
+			}
+			
+			newControllers[i] = motor;
+		}
+
+        return newControllers;
+    }
 
 	/**
-	 * Default constructor, same as superclass plus setting xyswap to off by default.
+	 * Simpler constructor, takes info about the motors and turns it into objects and sets the xyswap to false
+     * Motor info should ALWAYS be provided in the following order: front-left, rear-left, front-right, rear-right
+     * 
+     * @param motorPorts The ports the motors are plugged into
+     * @param motorTypes The types of speed controllers the motors are plugged into
 	 */
-	public TRCMecanumDrive(SpeedController frontLeftMotor, SpeedController rearLeftMotor, SpeedController frontRightMotor, SpeedController rearRightMotor)
+	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes)
 	{
-		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
+        SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
+        this.frontLeftMotor = controllers[0];
+        this.rearLeftMotor = controllers[1];
+        this.frontRightMotor = controllers[2];
+        this.rearRightMotor = controllers[3];
+
+		drive = new MecanumDrive(this.frontLeftMotor, this.rearLeftMotor, this.frontRightMotor, this.rearRightMotor);
 		this.xyswap = false;
-		
-		this.frontLeftMotor = frontLeftMotor;
-		this.rearLeftMotor = rearLeftMotor;
-		this.frontRightMotor = frontRightMotor;
-		this.rearRightMotor = rearRightMotor;
 	}
 	
 	/**
-	 * Default constructor, same as superclass but setting xyswap to something specific.
-	 * 
+	 * More specific constructor, takes info about the motors and turns it into objects and sets the xyswap to what the user needs it to be
+	 * Motor info should ALWAYS be provided in the following order: front-left, rear-left, front-right, rear-right
+     * 
+     * @param motorPorts The ports the motors are plugged into
+     * @param motorTypes The types of speed controllers the motors are plugged into
 	 * @param swapxy Whether to swap x and y inputs for the driveCartesian method.
 	 */
-	public TRCMecanumDrive(SpeedController frontLeftMotor, SpeedController rearLeftMotor, SpeedController frontRightMotor, SpeedController rearRightMotor, boolean swapxy)
+	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean swapxy)
 	{
-		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
+		SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
+        this.frontLeftMotor = controllers[0];
+        this.rearLeftMotor = controllers[1];
+        this.frontRightMotor = controllers[2];
+        this.rearRightMotor = controllers[3];
+
+		drive = new MecanumDrive(this.frontLeftMotor, this.rearLeftMotor, this.frontRightMotor, this.rearRightMotor);
 		this.xyswap = swapxy;
-		
-		this.frontLeftMotor = frontLeftMotor;
-		this.rearLeftMotor = rearLeftMotor;
-		this.frontRightMotor = frontRightMotor;
-		this.rearRightMotor = rearRightMotor;
 	}
 	
 	
@@ -63,16 +137,15 @@ public class TRCMecanumDrive extends MecanumDrive
 	/**
 	 * Method on top of the default driveCartesian so we can swap x and y if needed before passing it off to the default.
 	 */
-	@Override
 	public void driveCartesian(double ySpeed, double xSpeed, double zRotation)
 	{
 		if (this.xyswap)
 		{
-			super.driveCartesian(xSpeed, ySpeed, zRotation);
+			drive.driveCartesian(xSpeed, ySpeed, zRotation);
 		}
 		else
 		{
-			super.driveCartesian(ySpeed, xSpeed, zRotation);
+			drive.driveCartesian(ySpeed, xSpeed, zRotation);
 		}
 	}
 	

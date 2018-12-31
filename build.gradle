@@ -30,3 +30,7 @@ uploadArchives {
        }
     }
 }
+
+jar {
+    from sourceSets.main.allSource
+}

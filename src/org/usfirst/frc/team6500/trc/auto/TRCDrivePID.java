@@ -20,7 +20,7 @@ public class TRCDrivePID extends Thread
 
     private static TRCEncoderSet encoders;
     private static TRCGyroBase gyro;
-    private static RobotDriveBase drive;
+    private static Object drive;
 
     private static boolean driving;
     private static DriveType driveType;
@@ -40,7 +40,7 @@ public class TRCDrivePID extends Thread
      * @param driveBase The robot's drivetrain
      * @param driveBaseType The type of the robot's drivetrain {@link DriveType}
      */
-    public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, RobotDriveBase driveBase, DriveType driveBaseType)
+    public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, Object driveBase, DriveType driveBaseType)
     {
         encoders = encoderset;
         gyro = gyroBase;
