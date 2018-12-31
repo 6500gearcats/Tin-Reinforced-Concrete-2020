@@ -7,6 +7,7 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
@@ -89,8 +90,8 @@ public class TRCDifferentialDrive
 	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes)
 	{
         SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
-        this.leftMotor = controllers[0];
-        this.rightMotor = controllers[1];
+        this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
+        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
 
 		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
 		this.arcadeMode = DifferentialArcadeMode.ZRotation;
@@ -107,8 +108,8 @@ public class TRCDifferentialDrive
 	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, DifferentialArcadeMode arcadeType)
 	{
 		SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
-        this.leftMotor = controllers[0];
-        this.rightMotor = controllers[1];
+        this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
+        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
 
 		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
 		this.arcadeMode = arcadeType;
