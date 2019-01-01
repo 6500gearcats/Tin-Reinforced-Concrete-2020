@@ -61,7 +61,7 @@ public class TRCDrivePID
      * @param driveAction The type of action the robot should take (one of {@link DriveActionType})
      * @param unit The inches/degrees of the action
      */
-    public void run(DriveActionType driveAction, double unit)
+    public static void run(DriveActionType driveAction, double unit)
     {
         driving = false;
         actionType = driveAction;
@@ -90,7 +90,7 @@ public class TRCDrivePID
     /**
      * Drive the robot forward (measurement) inches
      */
-    public void driveForward()
+    public static void driveForward()
     {
         autoSpeed.reset();
         MPID.reset();
@@ -132,7 +132,7 @@ public class TRCDrivePID
     /**
      * Drive the robot right (measurement) inches (exclusive to mecanum)
      */
-    public void driveRight()
+    public static void driveRight()
     {
         if (!driving)
         {
@@ -170,7 +170,7 @@ public class TRCDrivePID
     /**
      * Rotate the robot (measurement) degrees
      */
-    public void driveRotation()
+    public static void driveRotation()
     {
         if (!driving)
         {

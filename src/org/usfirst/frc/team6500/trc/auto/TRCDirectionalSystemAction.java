@@ -21,7 +21,7 @@ public class TRCDirectionalSystemAction extends Thread
     /**
      * Register a DirectionalSystem for later use
      */
-    public void registerSystem(String systemName, TRCDirectionalSystem actionSystem)
+    public static void registerSystem(String systemName, TRCDirectionalSystem actionSystem)
     {
         systemRegistry.put(systemName, actionSystem);
     }
