@@ -1,14 +1,14 @@
 package org.usfirst.frc.team6500.trc.util;
 
+import java.util.HashMap;
+
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DataInterfaceType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
-import java.util.HashMap;
 
 /**
  * Send data from the robot to the driver station by some means, either simply through NetworkTables or
@@ -122,10 +122,10 @@ public class TRCNetworkData
     public static int putOptions(String[] choices)
     {
         SendableChooser<Integer> chooser = new SendableChooser<Integer>();
-        chooser.addDefault(choices[0], 0);
+        chooser.setDefaultOption(choices[0], 0);
         for (int i = 0; i < choices.length; i++)
         {
-            chooser.addObject(choices[i], i);
+            chooser.addOption(choices[i], i);
         }
 
         options.put(options.size(), chooser);
