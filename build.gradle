@@ -1,14 +1,16 @@
 plugins {
     id "java-library"
-    id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1"
 }
 
-version = "2019.0.0-alpha-2"
+version = "2019.0.0"
 
 dependencies {
-    api wpilib()
-    implementation ctre()
-    implementation navx()
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    testCompile 'junit:junit:4.12'
 }
 
 sourceSets {
@@ -17,10 +19,6 @@ sourceSets {
             srcDir 'src'
         }
     }
-}
-
-wrapper {
-    gradleVersion = '4.9'
 }
 
 uploadArchives {
