@@ -9,12 +9,11 @@ import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SD540;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 
 
@@ -41,7 +40,7 @@ public class TRCMecanumDrive
 
         for (int i = 0; i < motorPorts.length; i++)
 		{
-			SpeedController motor = null;
+			SpeedController motor;
 			
 			switch(motorTypes[i])
 			{
@@ -64,10 +63,10 @@ public class TRCMecanumDrive
 				motor = new Spark(motorPorts[i]);
 				break;
 			case Talon:
-				motor = new Talon(motorPorts[i]);
+				motor = new PWMTalonSRX(motorPorts[i]);
 				break;
 			case Victor:
-				motor = new Victor(motorPorts[i]);
+				motor = new PWMVictorSPX(motorPorts[i]);
 				break;
 			case VictorSP:
 				motor = new VictorSP(motorPorts[i]);
@@ -77,6 +76,7 @@ public class TRCMecanumDrive
 				break;
 			}
 			
+			((PWMSpeedController) motor).close();
 			newControllers[i] = motor;
 		}
 

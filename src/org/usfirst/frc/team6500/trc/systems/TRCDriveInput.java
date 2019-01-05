@@ -1,18 +1,19 @@
 package org.usfirst.frc.team6500.trc.systems;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
-
-import edu.wpi.first.wpilibj.Joystick;
+import org.usfirst.frc.team6500.trc.wrappers.sensors.TCRJoystick;
 
 public class TRCDriveInput
 {
-	private static HashMap<Integer, Joystick> inputSticks;
-    private static HashMap<Integer, HashMap<Integer, Runnable>> buttonFuncs; 
-    private static HashMap<Integer, HashMap<int[], Runnable>> absenceFuncs; // oh god why does this work
+	private static HashMap<Integer, TCRJoystick> inputSticks;
+	private static ExecutorService executor;
 	private static double baseSpeed = 0.0;
     private static double boostSpeed = 0.0;
     
@@ -26,8 +27,10 @@ public class TRCDriveInput
 	{
 		for (int port : ports)
 		{
-			inputSticks.put(port, new Joystick(port));
+			inputSticks.put(port, new TCRJoystick(port));
 		}
+		
+		executor = Executors.newCachedThreadPool();
 		
         baseSpeed = speedBase;
         boostSpeed = speedBoost;
@@ -36,64 +39,84 @@ public class TRCDriveInput
 	}
 	
 	/**
-	 * Assign a function to be run when a certain button on a certain joystick is pressed
+	 * Assigns a function to a joystick, activated when the button states match the required values.
 	 * 
-	 * @param joystickPort Joystick to bind to
-	 * @param button Button to bind to
-	 * @param func Function to be run
+	 * <p>The function is run when the state of each buttons[i] equals values[i].
+	 * 
+	 * @param joystickPort port number of joystick to bind to
+	 * @param buttons the array of buttons
+	 * @param values the array of booleans corresponding to required button states
+	 * @param func function to be run
 	 */
-	public static void bindButton(int joystickPort, int button, Runnable func)
+	public static void bindButton(int joystickPort, int[] buttons, boolean[] values, Runnable func)
 	{
-		buttonFuncs.get(joystickPort).put(button, func);
-		TRCNetworkData.logString(VerbosityType.Log_Debug, "A binding has been created for Button " + button + " on Joystick " + joystickPort);
+		TCRJoystick joystick = inputSticks.get(joystickPort);
+		joystick.bind(buttons, values, func);
+		inputSticks.put(joystickPort, joystick);
+		
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "A binding has been created for the Buttons " + buttons.toString() + " with activation values " + values.toString() + "on Joystick " + joystickPort);
     }
-    
-    /**
-	 * Assign a function to be run when a certain set of buttons on a certain joystick are not being pressed
+	
+	/**
+	 * Assigns a function to a joystick, activated when the button states match the required value.
 	 * 
-	 * @param joystickPort Joystick to bind to
-	 * @param buttons Buttons to bind to
-	 * @param func Function to be run
+	 * <p>The function is run when the state of each button equals the value.
+	 * 
+	 * @param joystickPort port number of joystick to bind to
+	 * @param buttons the array of buttons
+	 * @param value the boolean corresponding to the required button states
+	 * @param func function to be run
 	 */
-	public static void bindButtonAbsence(int joystickPort, int[] buttons, Runnable func)
+	public static void bindButton(int joystickPort, int button, boolean value, Runnable func)
 	{
-		absenceFuncs.get(joystickPort).put(buttons, func);
-		TRCNetworkData.logString(VerbosityType.Log_Debug, "An absence binding has been created for " + buttons.length + "buttons on Joystick " + joystickPort);
+		TCRJoystick joystick = inputSticks.get(joystickPort);
+		joystick.bind(new int[] {button}, new boolean[] {value}, func);
+		inputSticks.put(joystickPort, joystick);
+		
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "A binding has been created for the Button " + button + " with activation value " + value + "on Joystick " + joystickPort);
 	}
 	
 	/**
-	 * Checks every button on every Joystick, and if the button is pressed and has a function bound to it then
-	 * the function will be run
+	 * Assigns a function to a joystick, activated when the button state matches the required value.
+	 * 
+	 * <p>The function is run when the state of the button equals the value.
+	 * 
+	 * @param joystickPort port number of joystick to bind to
+	 * @param buttons the button
+	 * @param value the boolean corresponding to the required button state
+	 * @param func function to be run
+	 */
+	public static void bindButton(int joystickPort, int[] buttons, boolean value, Runnable func)
+	{
+		boolean[] values = new boolean[buttons.length];
+		for(int i = 0; i < buttons.length; i++)
+		{
+			values[i] = value;
+		}
+		
+		TCRJoystick joystick = inputSticks.get(joystickPort);
+		joystick.bind(buttons, values, func);
+		inputSticks.put(joystickPort, joystick);
+		
+		TRCNetworkData.logString(VerbosityType.Log_Debug, "A binding has been created for the Buttons " + buttons.toString() + " with activation value " + value + "on Joystick " + joystickPort);
+	}
+	
+	/**
+	 * Runs all eligible functions.
 	 */
 	public static void updateDriveInput()
 	{
-		for (Integer stickPort : inputSticks.keySet())
+		//Fills a list with all eligible tasks
+		ArrayList<Runnable> tasks = new ArrayList<>();
+		for (TCRJoystick joystick : inputSticks.values())
 		{
-			for (int button = 0; button < inputSticks.get(stickPort).getButtonCount(); button++)
-			{
-				if (inputSticks.get(stickPort).getRawButton(button) && buttonFuncs.get(stickPort).containsKey(button)) // Simply put, is the button pressed && is there are function bound to it
-				{
-					buttonFuncs.get(inputSticks.get(stickPort).getPort()).get(button).run();
-				}
-            }
-            
-            for (int[] buttonList : absenceFuncs.get(stickPort).keySet())
-            {
-                for (int i = 0; i < buttonList.length; i++)
-                {
-                    if (inputSticks.get(stickPort).getRawButton(buttonList[i]))
-                    {
-                        if (i == buttonList.length - 1)
-                        {
-                            absenceFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
-                            break;
-                        }
-                        continue;
-                    }
-                    
-                    break;
-                }
-            }
+			tasks.addAll(joystick.findTasks());
+		}
+		
+		//Submits each eligible task
+		for(Runnable task : tasks)
+		{
+			executor.submit(task);
 		}
 	}
 	
