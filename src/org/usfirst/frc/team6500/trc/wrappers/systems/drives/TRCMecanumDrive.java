@@ -41,7 +41,7 @@ public class TRCMecanumDrive
 
         for (int i = 0; i < motorPorts.length; i++)
 		{
-			SpeedController motor = null;
+			SpeedController motor;
 			
 			switch(motorTypes[i])
 			{
@@ -77,6 +77,7 @@ public class TRCMecanumDrive
 				break;
 			}
 			
+			((Spark) motor).close();
 			newControllers[i] = motor;
 		}
 

@@ -74,6 +74,7 @@ public class TRCDifferentialDrive
 				break;
 			}
 			
+			((Spark) motor).close();
 			newControllers[i] = motor;
 		}
 

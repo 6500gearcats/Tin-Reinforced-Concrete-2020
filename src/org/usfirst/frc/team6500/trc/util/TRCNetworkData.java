@@ -122,10 +122,10 @@ public class TRCNetworkData
     public static int putOptions(String[] choices)
     {
         SendableChooser<Integer> chooser = new SendableChooser<Integer>();
-        chooser.addDefault(choices[0], 0);
+        
         for (int i = 0; i < choices.length; i++)
         {
-            chooser.addObject(choices[i], i);
+            chooser.addOption(choices[i], i);
         }
 
         options.put(options.size(), chooser);
