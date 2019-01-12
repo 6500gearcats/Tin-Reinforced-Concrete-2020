@@ -10,15 +10,14 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SD540;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.VictorSP;
 
-//import com.ctre.pheonix.*;
-//import com.ctre.pheonix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 /**
@@ -37,12 +36,10 @@ public class TRCDifferentialDrive
     
     private SpeedController[] speedControllerCreate(int[] motorPorts, SpeedControllerType[] motorTypes)
     {
-        SpeedController newControllers[] = new SpeedController[motorPorts.length];
+		SpeedController newControllers[] = new SpeedController[motorPorts.length];
 
         for (int i = 0; i < motorPorts.length; i++)
 		{
-			SpeedController motor = null;
-			
 			switch(motorTypes[i])
 			{
 			case DMC60:
@@ -73,7 +70,8 @@ public class TRCDifferentialDrive
 				newControllers[i] = new VictorSP(motorPorts[i]);
 				break;
 			case CANTalonSRX:
-				//newControllers[i];
+				newControllers[i] = new WPI_TalonSRX(motorPorts[i]);
+				((WPI_TalonSRX) newControllers[i]).set(ControlMode.PercentOutput, 0.0);
 				break;
 			default:
 				newControllers[i] = new Spark(motorPorts[i]);

@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SD540;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.VictorSP;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 /**
@@ -40,44 +42,43 @@ public class TRCMecanumDrive
 
         for (int i = 0; i < motorPorts.length; i++)
 		{
-			SpeedController motor;
-			
 			switch(motorTypes[i])
 			{
 			case DMC60:
-				motor = new DMC60(motorPorts[i]);
+				newControllers[i] = new DMC60(motorPorts[i]);
 				break;
 			case Jaguar:
-				motor = new Jaguar(motorPorts[i]);
+				newControllers[i] = new Jaguar(motorPorts[i]);
 				break;
 			case PWMTalonSRX:
-				motor = new PWMTalonSRX(motorPorts[i]);
+				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
 				break;
 			case PWMVictorSPX:
-				motor = new PWMVictorSPX(motorPorts[i]);
+				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
 				break;
 			case SD540:
-				motor = new SD540(motorPorts[i]);
+				newControllers[i] = new SD540(motorPorts[i]);
 				break;
 			case Spark:
-				motor = new Spark(motorPorts[i]);
+				newControllers[i] = new Spark(motorPorts[i]);
 				break;
 			case Talon:
-				motor = new PWMTalonSRX(motorPorts[i]);
+				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
 				break;
 			case Victor:
-				motor = new PWMVictorSPX(motorPorts[i]);
+				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
 				break;
 			case VictorSP:
-				motor = new VictorSP(motorPorts[i]);
+				newControllers[i] = new VictorSP(motorPorts[i]);
+				break;
+			case CANTalonSRX:
+				newControllers[i] = new WPI_TalonSRX(motorPorts[i]);
+				((WPI_TalonSRX) newControllers[i]).set(ControlMode.PercentOutput, 0.0);
 				break;
 			default:
-				motor = new Spark(motorPorts[i]);
+				newControllers[i] = new Spark(motorPorts[i]);
 				break;
 			}
-			
-			((PWMSpeedController) motor).close();
-			newControllers[i] = motor;
 		}
 
         return newControllers;
