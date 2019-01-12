@@ -24,6 +24,10 @@ public class TRCDriveInput
 	 */
 	public static void initializeDriveInput(int[] ports, double speedBase, double speedBoost)
 	{
+		inputSticks = new HashMap<Integer, Joystick>();
+		buttonFuncs = new HashMap<Integer, HashMap<Integer, Runnable>>();
+		absenceFuncs = new HashMap<Integer, HashMap<int[], Runnable>>();
+
 		for (int port : ports)
 		{
 			inputSticks.put(port, new Joystick(port));
@@ -32,7 +36,7 @@ public class TRCDriveInput
         baseSpeed = speedBase;
         boostSpeed = speedBoost;
         
-		TRCNetworkData.logString(VerbosityType.Log_Info, "Driver Input is online.");
+		//TRCNetworkData.logString(VerbosityType.Log_Info, "Driver Input is online.");
 	}
 	
 	/**

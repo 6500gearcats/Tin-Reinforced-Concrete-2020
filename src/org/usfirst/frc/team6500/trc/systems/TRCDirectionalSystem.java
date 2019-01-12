@@ -37,6 +37,8 @@ public class TRCDirectionalSystem
 	 */
 	public TRCDirectionalSystem(int[] motorPorts, SpeedControllerType[] motorTypes, boolean balanceInvert, double dFSpeed, double dRSpeed)
 	{
+		this.outputMotors = new HashMap<Integer, SpeedController>();
+
 		for (int i = 0; i < motorPorts.length; i++)
 		{
 			SpeedController motor = null;

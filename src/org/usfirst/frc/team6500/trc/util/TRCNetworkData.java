@@ -34,6 +34,9 @@ public class TRCNetworkData
      */
     public static void initializeNetworkData(DataInterfaceType DIType)
     {
+        options = new HashMap<Integer, SendableChooser<Integer>>();
+        dataPoints = new HashMap<String, NetworkTableEntry>();
+
         interfaceType = DIType;
         tableServer = NetworkTableInstance.getDefault();
         if (!tableServer.isConnected()) { tableServer.startServer(); }

@@ -23,7 +23,15 @@ public class TRCDirectionalSystemAction extends Thread
      */
     public static void registerSystem(String systemName, TRCDirectionalSystem actionSystem)
     {
-        systemRegistry.put(systemName, actionSystem);
+		try
+		{
+			systemRegistry.put(systemName, actionSystem);
+		}
+		catch (Exception e)
+		{
+			systemRegistry = new HashMap<String, TRCDirectionalSystem>();
+			systemRegistry.put(systemName, actionSystem);
+		}
     }
 
 	/**
