@@ -40,6 +40,7 @@ public class TRCTypes
 		Talon,
 		Victor,
 		VictorSP,
+		CANTalonSRX,
 	}
 	
 	// Types of actions a TRCDirectionalSystems can execute

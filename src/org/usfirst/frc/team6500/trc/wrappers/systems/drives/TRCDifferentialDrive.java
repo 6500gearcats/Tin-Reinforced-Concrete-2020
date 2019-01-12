@@ -17,6 +17,10 @@ import edu.wpi.first.wpilibj.SD540;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.VictorSP;
 
+//import com.ctre.pheonix.*;
+//import com.ctre.pheonix.motorcontrol.can.TalonSRX;
+
+
 /**
  * A wrapper on top of the standard DifferentialDrive class, to make it easier to add features
  */
@@ -42,39 +46,39 @@ public class TRCDifferentialDrive
 			switch(motorTypes[i])
 			{
 			case DMC60:
-				motor = new DMC60(motorPorts[i]);
+				newControllers[i] = new DMC60(motorPorts[i]);
 				break;
 			case Jaguar:
-				motor = new Jaguar(motorPorts[i]);
+				newControllers[i] = new Jaguar(motorPorts[i]);
 				break;
 			case PWMTalonSRX:
-				motor = new PWMTalonSRX(motorPorts[i]);
+				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
 				break;
 			case PWMVictorSPX:
-				motor = new PWMVictorSPX(motorPorts[i]);
+				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
 				break;
 			case SD540:
-				motor = new SD540(motorPorts[i]);
+				newControllers[i] = new SD540(motorPorts[i]);
 				break;
 			case Spark:
-				motor = new Spark(motorPorts[i]);
+				newControllers[i] = new Spark(motorPorts[i]);
 				break;
 			case Talon:
-				motor = new PWMTalonSRX(motorPorts[i]);
+				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
 				break;
 			case Victor:
-				motor = new PWMVictorSPX(motorPorts[i]);
+				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
 				break;
 			case VictorSP:
-				motor = new VictorSP(motorPorts[i]);
+				newControllers[i] = new VictorSP(motorPorts[i]);
+				break;
+			case CANTalonSRX:
+				//newControllers[i];
 				break;
 			default:
-				motor = new Spark(motorPorts[i]);
+				newControllers[i] = new Spark(motorPorts[i]);
 				break;
 			}
-			
-			((PWMSpeedController) motor).close();
-			newControllers[i] = motor;
 		}
 
         return newControllers;
