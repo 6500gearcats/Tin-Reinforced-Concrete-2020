@@ -141,7 +141,7 @@ public class TRCMecanumDrive
 	{
 		if (this.xyswap)
 		{
-			drive.driveCartesian(xSpeed, ySpeed, zRotation);
+			drive.driveCartesian(xSpeed, -ySpeed, zRotation);
 		}
 		else
 		{

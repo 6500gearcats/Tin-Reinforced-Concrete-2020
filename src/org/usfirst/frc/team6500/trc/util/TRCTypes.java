@@ -43,7 +43,7 @@ public class TRCTypes
 		CANTalonSRX,
 	}
 	
-	// Types of actions a TRCDirectionalSystems can execute
+	// Types of actions a TRCDirectionalSystem can execute
 	public enum DirectionalSystemActionType
 	{
 		Stop,
@@ -51,6 +51,13 @@ public class TRCTypes
 		Reverse,
 		FullForward,
 		FullReverse,
+	}
+
+	// Types of actions a TRCPneumaticSystem can execute
+	public enum PneumaticSystemActionType
+	{
+		Open,
+		Close,
 	}
 
 	// Types of actions a drivetrain can execute in autonomous

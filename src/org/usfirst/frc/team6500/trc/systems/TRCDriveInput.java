@@ -26,6 +26,7 @@ public class TRCDriveInput
 	{
 		inputSticks = new HashMap<Integer, Joystick>();
 		buttonFuncs = new HashMap<Integer, HashMap<Integer, Runnable>>();
+		
 		absenceFuncs = new HashMap<Integer, HashMap<int[], Runnable>>();
 
 		for (int port : ports)
@@ -73,31 +74,37 @@ public class TRCDriveInput
 	{
 		for (Integer stickPort : inputSticks.keySet())
 		{
-			for (int button = 0; button < inputSticks.get(stickPort).getButtonCount(); button++)
+			if (buttonFuncs.containsKey(stickPort))
 			{
-				if (inputSticks.get(stickPort).getRawButton(button) && buttonFuncs.get(stickPort).containsKey(button)) // Simply put, is the button pressed && is there are function bound to it
+				for (int button = 1; button < inputSticks.get(stickPort).getButtonCount(); button++)
 				{
-					buttonFuncs.get(inputSticks.get(stickPort).getPort()).get(button).run();
+					if (inputSticks.get(stickPort).getRawButton(button) && buttonFuncs.get(stickPort).containsKey(button)) // Simply put, is the button pressed && is there are function bound to it
+					{
+						buttonFuncs.get(inputSticks.get(stickPort).getPort()).get(button).run();
+					}
 				}
-            }
-            
-            for (int[] buttonList : absenceFuncs.get(stickPort).keySet())
-            {
-                for (int i = 0; i < buttonList.length; i++)
-                {
-                    if (inputSticks.get(stickPort).getRawButton(buttonList[i]))
-                    {
-                        if (i == buttonList.length - 1)
-                        {
-                            absenceFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
-                            break;
-                        }
-                        continue;
-                    }
-                    
-                    break;
-                }
-            }
+			}
+			
+			if (absenceFuncs.containsKey(stickPort))
+			{
+            	for (int[] buttonList : absenceFuncs.get(stickPort).keySet())
+				{
+					for (int i = 1; i < buttonList.length; i++)
+					{
+						if (inputSticks.get(stickPort).getRawButton(buttonList[i]))
+						{
+							if (i == buttonList.length - 1)
+							{
+								absenceFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
+								break;
+							}
+							continue;
+						}
+						
+						break;
+					}
+				}
+			}
 		}
 	}
 	
