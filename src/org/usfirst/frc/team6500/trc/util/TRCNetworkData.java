@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.HashMap;
 
@@ -60,22 +61,24 @@ public class TRCNetworkData
         verbosityOptions[0] = "Debug (All Messages)";
         verbosityOptions[1] = "Info. (Limited Messages)";
         verbosityOptions[2] = "Error (Critical Messages)";
-        vOptionsID = putOptions(verbosityOptions);
+        putOptions(verbosityOptions, 0);
+        vOptionsID = 0;
     }
 
     public static VerbosityType getVerbosity()
     {
-        switch (getSelection(vOptionsID))
-        {
-            case 0:
-                return VerbosityType.Log_Debug;
-            case 1:
-                return VerbosityType.Log_Info;
-            case 2:
-                return VerbosityType.Log_Error;
-            default:
-                return null;
-        }
+        return VerbosityType.Log_Debug;
+        // switch (getSelection(vOptionsID))
+        // {
+        //     case 0:
+        //         return VerbosityType.Log_Debug;
+        //     case 1:
+        //         return VerbosityType.Log_Info;
+        //     case 2:
+        //         return VerbosityType.Log_Error;
+        //     default:
+        //         return null;
+        // }
     }
 
     /**
@@ -105,7 +108,7 @@ public class TRCNetworkData
         {
             if (lineCount >= 10)
             {
-                oldLog = oldLog.substring(oldLog.indexOf("\n") + 1, oldLog.length() + 1);
+                oldLog = oldLog.substring(oldLog.indexOf("\n") + 1, oldLog.length());
                 break;
             }
             cutLog = cutLog.substring(cutLog.indexOf("\n"), cutLog.length() - 1);
@@ -122,7 +125,7 @@ public class TRCNetworkData
      * @param choices The options the user should have to choose from
      * @return Identifier to be used with getSelection to find out what choice was selected.
      */
-    public static int putOptions(String[] choices)
+    public static void putOptions(String[] choices, int id)
     {
         SendableChooser<Integer> chooser = new SendableChooser<Integer>();
         
@@ -131,8 +134,8 @@ public class TRCNetworkData
             chooser.addOption(choices[i], i);
         }
 
-        options.put(options.size(), chooser);
-        return options.size() - 1;
+        options.put(id, chooser);
+        SmartDashboard.putData(Integer.toString(id), chooser);
     }
 
     /**

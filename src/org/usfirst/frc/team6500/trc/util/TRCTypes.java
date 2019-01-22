@@ -1,5 +1,21 @@
 package org.usfirst.frc.team6500.trc.util;
 
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.DMC60;
+import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.SD540;
+import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.VictorSP;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCEncoder;
+import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCTalonEncoder;
+
+
 /**
  * Enumerations used to specify which type of something should be used in the creation or execution of something which has several
  *     possible values
@@ -41,6 +57,13 @@ public class TRCTypes
 		Victor,
 		VictorSP,
 		CANTalonSRX,
+	}
+
+	// Types of Encoders
+	public enum EncoderType
+	{
+		Digital,
+		Talon,
 	}
 	
 	// Types of actions a TRCDirectionalSystem can execute
@@ -98,4 +121,84 @@ public class TRCTypes
 			else                            { return false; }
 		}
 	}
+
+
+	public static Object encoderTypeToObject(int[] ports, double dpp, boolean lowres, boolean inverted, EncoderType type)
+	{
+		Object encoder = null;
+
+		switch(type)
+		{
+			case Digital:
+				encoder = new TRCEncoder(ports, dpp, lowres, inverted);
+				break;
+			case Talon:
+				encoder = new TRCTalonEncoder(ports[0], dpp, inverted);
+				break;
+			default:
+				break;
+		}
+
+		return encoder;
+	}
+
+	public static SpeedController controllerTypeToObject(int port, SpeedControllerType type)
+	{
+		SpeedController motor = null;
+
+		switch(type)
+		{
+			case DMC60:
+				motor = new DMC60(port);
+				break;
+			case Jaguar:
+				motor = new Jaguar(port);
+				break;
+			case PWMTalonSRX:
+				motor = new PWMTalonSRX(port);
+				break;
+			case PWMVictorSPX:
+				motor = new PWMVictorSPX(port);
+				break;
+			case SD540:
+				motor = new SD540(port);
+				break;
+			case Spark:
+				motor = new Spark(port);
+				break;
+			case Talon:
+				motor = new PWMTalonSRX(port);
+				break;
+			case Victor:
+				motor = new PWMVictorSPX(port);
+				break;
+			case VictorSP:
+				motor = new VictorSP(port);
+				break;
+			case CANTalonSRX:
+				motor = new WPI_TalonSRX(port);
+				((WPI_TalonSRX) motor).configFactoryDefault();
+				((WPI_TalonSRX) motor).set(ControlMode.PercentOutput, 0.0);
+				((WPI_TalonSRX) motor).setInverted(false);
+				((WPI_TalonSRX) motor).setSensorPhase(false);
+				break;
+			default:
+				motor = new Spark(port);
+				break;
+		}
+
+		return motor;
+	}
+
+	public static SpeedController[] speedControllerCreate(int[] motorPorts, SpeedControllerType[] motorTypes)
+    {
+		SpeedController newControllers[] = new SpeedController[motorPorts.length];
+
+        for (int i = 0; i < motorPorts.length; i++)
+		{
+			newControllers[i] = controllerTypeToObject(motorPorts[i], motorTypes[i]);
+		}
+
+        return newControllers;
+    }
 }

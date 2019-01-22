@@ -40,14 +40,15 @@ public class TRCDrivePID
      * @param gyroBase The robot's primary gyro
      * @param driveBase The robot's drivetrain
      * @param driveBaseType The type of the robot's drivetrain {@link DriveType}
-     * @param maxSpeed Fastest speed the robot should go in autonomous
+     * @param topSpeed Fastest speed the robot should go in autonomous
      */
-    public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, Object driveBase, DriveType driveBaseType, double maxSpeed)
+    public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, Object driveBase, DriveType driveBaseType, double topSpeed)
     {
         encoders = encoderset;
         gyro = gyroBase;
         drive = driveBase;
         driveType = driveBaseType;
+        maxSpeed = topSpeed;
 
         TRCNetworkData.logString(VerbosityType.Log_Info, "DrivePID is online.");
         TRCNetworkData.createDataPoint("PIDSetpoint");
@@ -107,12 +108,12 @@ public class TRCDrivePID
             {
                 double newSpeed = MPID.getOutput(encoders.getAverageDistanceTraveled());
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
-                double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);
+                double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 0.85);
                 TRCNetworkData.updateDataPoint("PIDOutputSmoothed", smoothedSpeed);
 
                 if (driveType == DriveType.Mecanum)
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(0.0, smoothedSpeed, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(-smoothedSpeed, 0.0, 0.0);
                 }
                 else if (driveType == DriveType.Differential)
                 {
@@ -154,7 +155,7 @@ public class TRCDrivePID
 
                 if (driveType == DriveType.Mecanum)
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(smoothedSpeed, 0.0, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(0.0, smoothedSpeed, 0.0);
                 }
 
                 if (Math.abs(encoders.getAverageDistanceTraveled() - measurement) < deadband)

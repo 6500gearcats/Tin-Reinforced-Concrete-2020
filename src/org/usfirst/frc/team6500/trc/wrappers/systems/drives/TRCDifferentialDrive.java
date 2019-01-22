@@ -2,22 +2,13 @@ package org.usfirst.frc.team6500.trc.wrappers.systems.drives;
 
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DifferentialArcadeMode;
+import org.usfirst.frc.team6500.trc.util.TRCTypes;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.DMC60;
-import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SD540;
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.VictorSP;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 /**
@@ -33,54 +24,6 @@ public class TRCDifferentialDrive
     
     private DifferentialDrive drive;
 	
-    
-    private SpeedController[] speedControllerCreate(int[] motorPorts, SpeedControllerType[] motorTypes)
-    {
-		SpeedController newControllers[] = new SpeedController[motorPorts.length];
-
-        for (int i = 0; i < motorPorts.length; i++)
-		{
-			switch(motorTypes[i])
-			{
-			case DMC60:
-				newControllers[i] = new DMC60(motorPorts[i]);
-				break;
-			case Jaguar:
-				newControllers[i] = new Jaguar(motorPorts[i]);
-				break;
-			case PWMTalonSRX:
-				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
-				break;
-			case PWMVictorSPX:
-				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
-				break;
-			case SD540:
-				newControllers[i] = new SD540(motorPorts[i]);
-				break;
-			case Spark:
-				newControllers[i] = new Spark(motorPorts[i]);
-				break;
-			case Talon:
-				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
-				break;
-			case Victor:
-				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
-				break;
-			case VictorSP:
-				newControllers[i] = new VictorSP(motorPorts[i]);
-				break;
-			case CANTalonSRX:
-				newControllers[i] = new WPI_TalonSRX(motorPorts[i]);
-				((WPI_TalonSRX) newControllers[i]).set(ControlMode.PercentOutput, 0.0);
-				break;
-			default:
-				newControllers[i] = new Spark(motorPorts[i]);
-				break;
-			}
-		}
-
-        return newControllers;
-    }
 
 	/**
      * Simpler constructor, takes info about the motors and turns it into objects and sets arcadeMode to ZRotation by default.
@@ -91,7 +34,7 @@ public class TRCDifferentialDrive
 	 */
 	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes)
 	{
-        SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
+		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
         this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
         this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
 
@@ -109,7 +52,7 @@ public class TRCDifferentialDrive
 	 */
 	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, DifferentialArcadeMode arcadeType)
 	{
-		SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
+		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
         this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
         this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
 
@@ -132,7 +75,7 @@ public class TRCDifferentialDrive
 		{
 			this.drive.arcadeDrive(dps.getRealY(), dps.getRealZ());
 		}
-    }
+	} 
     
     /**
 	 * Identical to method from DifferentialDrive

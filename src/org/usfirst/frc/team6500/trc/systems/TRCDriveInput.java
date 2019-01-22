@@ -32,6 +32,8 @@ public class TRCDriveInput
 		for (int port : ports)
 		{
 			inputSticks.put(port, new Joystick(port));
+			buttonFuncs.put(port, new HashMap<Integer, Runnable>());
+			absenceFuncs.put(port, new HashMap<int[], Runnable>());
 		}
 		
         baseSpeed = speedBase;
@@ -89,9 +91,9 @@ public class TRCDriveInput
 			{
             	for (int[] buttonList : absenceFuncs.get(stickPort).keySet())
 				{
-					for (int i = 1; i < buttonList.length; i++)
+					for (int i = 0; i < buttonList.length; i++)
 					{
-						if (inputSticks.get(stickPort).getRawButton(buttonList[i]))
+						if (!inputSticks.get(stickPort).getRawButton(buttonList[i]))
 						{
 							if (i == buttonList.length - 1)
 							{
@@ -100,7 +102,6 @@ public class TRCDriveInput
 							}
 							continue;
 						}
-						
 						break;
 					}
 				}

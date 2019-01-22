@@ -1,13 +1,16 @@
 package org.usfirst.frc.team6500.trc.wrappers.sensors;
 
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
+import org.usfirst.frc.team6500.trc.util.TRCTypes;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.EncoderType;;
 
 public class TRCEncoderSet
 {
 	private int[] ports;
-	private TRCEncoder[] internalEncoders;
-	private double distancePerPulse;
+	private EncoderType[] types;
+	private Object[] internalEncoders;
+	private double[] distancesPerPulse;
 	private boolean lowresolution;
 	private int numwheels;
 	
@@ -20,10 +23,12 @@ public class TRCEncoderSet
 	 * @param lowres Only use the first channel for reading encoder values. Less accurate, but uses fewer ports. If this is enabled, dioports's consecutive values should be duplicates.
 	 * @param totalwheels How many encoders are plugged in. This must be half the length of dioports.
 	 */
-	public TRCEncoderSet(int[] dioports, double dpp, boolean lowres, int totalwheels)
+	public TRCEncoderSet(int[] dioports, double[] dpp, boolean lowres, int totalwheels, EncoderType[] types)
 	{
+		this.internalEncoders = new Object[totalwheels];
 		this.ports = dioports.clone();
-		this.distancePerPulse = dpp;
+		this.types = types.clone();
+		this.distancesPerPulse = dpp.clone();
 		this.lowresolution = lowres;
 		this.numwheels = totalwheels;
 		
@@ -33,11 +38,11 @@ public class TRCEncoderSet
 			
 			if (wheel >= this.numwheels / 2) // Right wheels
 			{
-				this.internalEncoders[wheel] = new TRCEncoder(encoderPorts, this.distancePerPulse, true, this.lowresolution);
+				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, true, this.types[wheel]);
 			}
 			else                             // Left wheels
 			{
-				this.internalEncoders[wheel] = new TRCEncoder(encoderPorts, this.distancePerPulse, false, this.lowresolution);
+				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, false, this.types[wheel]);
 			}
 		}
 
@@ -50,10 +55,18 @@ public class TRCEncoderSet
 	 */
 	public void resetAllEncoders()
 	{
-		for (TRCEncoder encoder : this.internalEncoders)
+		for (int i = 0; i < this.internalEncoders.length; i++)
 		{
-			encoder.reset();
+			if (this.types[i] == EncoderType.Digital)
+			{
+				((TRCEncoder) this.internalEncoders[i]).reset();
+			}
+			else
+			{
+				((TRCTalonEncoder) this.internalEncoders[i]).reset();
+			}
 		}
+
 		TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been reset");
 	}
 	
@@ -64,7 +77,14 @@ public class TRCEncoderSet
 	 */
 	public void resetIndividualEncoder(int encodernum)
 	{
-		this.internalEncoders[encodernum].reset();
+		if (this.types[encodernum] == EncoderType.Digital)
+			{
+				((TRCEncoder) this.internalEncoders[encodernum]).reset();
+			}
+			else
+			{
+				((TRCTalonEncoder) this.internalEncoders[encodernum]).reset();
+			}
 	}
 	
 	/**
@@ -76,9 +96,16 @@ public class TRCEncoderSet
 	{
 		double distancesum = 0.0;
 		
-		for (TRCEncoder encoder : this.internalEncoders)
+		for (int i = 0; i < this.internalEncoders.length; i++)
 		{
-			distancesum += encoder.getDistance();
+			if (this.types[i] == EncoderType.Digital)
+			{
+				distancesum += ((TRCEncoder) this.internalEncoders[i]).getDistance();
+			}
+			else
+			{
+				distancesum += ((TRCTalonEncoder) this.internalEncoders[i]).getDistance();
+			}
 		}
 		
 		TRCNetworkData.updateDataPoint("EncoderSet " + this.toString(), distancesum / this.internalEncoders.length);
@@ -94,9 +121,16 @@ public class TRCEncoderSet
 	{
 		double distancesum = 0.0;
 		
-		for (TRCEncoder encoder : this.internalEncoders)
+		for (int i = 0; i < this.internalEncoders.length; i++)
 		{
-			distancesum += Math.abs(encoder.getDistance());
+			if (this.types[i] == EncoderType.Digital)
+			{
+				distancesum += Math.abs(((TRCEncoder) this.internalEncoders[i]).getDistance());
+			}
+			else
+			{
+				distancesum += Math.abs(((TRCTalonEncoder) this.internalEncoders[i]).getDistance());
+			}
 		}
 		
 		TRCNetworkData.updateDataPoint("EncoderSet " + this.toString(), distancesum / this.internalEncoders.length);
@@ -111,7 +145,14 @@ public class TRCEncoderSet
 	 */
 	public double getIndividualDistanceTraveled(int encodernum)
 	{
-		return this.internalEncoders[encodernum].getDistance();
+		if (this.types[encodernum] == EncoderType.Digital)
+		{
+			return ((TRCEncoder) this.internalEncoders[encodernum]).getDistance();
+		}
+		else
+		{
+			return ((TRCTalonEncoder) this.internalEncoders[encodernum]).getDistance();
+		}
 	}
 	
 	/**
@@ -121,10 +162,10 @@ public class TRCEncoderSet
 	{
 		double averageDistanceTraveled = this.getAverageDistanceTraveled();
 		
-		for (TRCEncoder encoder : this.internalEncoders)
-		{
-			encoder.setDistancePerPulse(encoder.getDistancePerPulse() * averageDistanceTraveled / encoder.getDistance());
-		}
+		// for (TRCEncoder encoder : this.internalEncoders)
+		// {
+		// 	encoder.setDistancePerPulse(encoder.getDistancePerPulse() * averageDistanceTraveled / encoder.getDistance());
+		// }
 
 		TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been calibrated");
 	}

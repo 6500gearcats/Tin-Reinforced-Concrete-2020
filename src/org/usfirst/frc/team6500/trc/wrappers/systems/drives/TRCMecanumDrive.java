@@ -2,21 +2,12 @@ package org.usfirst.frc.team6500.trc.wrappers.systems.drives;
 
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes;
 
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.DMC60;
-import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SD540;
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.VictorSP;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 /**
@@ -35,55 +26,6 @@ public class TRCMecanumDrive
     
     private MecanumDrive drive;
 
-
-    private SpeedController[] speedControllerCreate(int[] motorPorts, SpeedControllerType[] motorTypes)
-    {
-        SpeedController newControllers[] = new SpeedController[motorPorts.length];
-
-        for (int i = 0; i < motorPorts.length; i++)
-		{
-			switch(motorTypes[i])
-			{
-			case DMC60:
-				newControllers[i] = new DMC60(motorPorts[i]);
-				break;
-			case Jaguar:
-				newControllers[i] = new Jaguar(motorPorts[i]);
-				break;
-			case PWMTalonSRX:
-				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
-				break;
-			case PWMVictorSPX:
-				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
-				break;
-			case SD540:
-				newControllers[i] = new SD540(motorPorts[i]);
-				break;
-			case Spark:
-				newControllers[i] = new Spark(motorPorts[i]);
-				break;
-			case Talon:
-				newControllers[i] = new PWMTalonSRX(motorPorts[i]);
-				break;
-			case Victor:
-				newControllers[i] = new PWMVictorSPX(motorPorts[i]);
-				break;
-			case VictorSP:
-				newControllers[i] = new VictorSP(motorPorts[i]);
-				break;
-			case CANTalonSRX:
-				newControllers[i] = new WPI_TalonSRX(motorPorts[i]);
-				((WPI_TalonSRX) newControllers[i]).set(ControlMode.PercentOutput, 0.0);
-				break;
-			default:
-				newControllers[i] = new Spark(motorPorts[i]);
-				break;
-			}
-		}
-
-        return newControllers;
-    }
-
 	/**
 	 * Simpler constructor, takes info about the motors and turns it into objects and sets the xyswap to false
      * Motor info should ALWAYS be provided in the following order: front-left, rear-left, front-right, rear-right
@@ -93,7 +35,7 @@ public class TRCMecanumDrive
 	 */
 	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes)
 	{
-        SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
+        SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
         this.frontLeftMotor = controllers[0];
         this.rearLeftMotor = controllers[1];
         this.frontRightMotor = controllers[2];
@@ -113,7 +55,7 @@ public class TRCMecanumDrive
 	 */
 	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean swapxy)
 	{
-		SpeedController[] controllers = speedControllerCreate(motorPorts, motorTypes);
+		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
         this.frontLeftMotor = controllers[0];
         this.rearLeftMotor = controllers[1];
         this.frontRightMotor = controllers[2];
