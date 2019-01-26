@@ -32,14 +32,19 @@ public class TRCDifferentialDrive
      * @param motorPorts The ports the motors are plugged into
      * @param motorTypes The types of speed controllers the motors are plugged into
 	 */
-	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes)
+	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion)
 	{
 		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
+		for (int i = 0; i < inversion.length; i++)
+		{
+			controllers[i].setInverted(inversion[i]);
+		}
         this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
         this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
 
 		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
 		this.arcadeMode = DifferentialArcadeMode.ZRotation;
+
 	}
 	
 	/**
@@ -50,9 +55,13 @@ public class TRCDifferentialDrive
      * @param motorTypes The types of speed controllers the motors are plugged into
      * @param arcadeType The axis of controller input which should be used for rotation
 	 */
-	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, DifferentialArcadeMode arcadeType)
+	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion, DifferentialArcadeMode arcadeType)
 	{
 		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
+		for (int i = 0; i < inversion.length; i++)
+		{
+			controllers[i].setInverted(inversion[i]);
+		}
         this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
         this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
 

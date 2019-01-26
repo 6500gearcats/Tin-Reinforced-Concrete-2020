@@ -33,9 +33,13 @@ public class TRCMecanumDrive
      * @param motorPorts The ports the motors are plugged into
      * @param motorTypes The types of speed controllers the motors are plugged into
 	 */
-	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes)
+	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion)
 	{
-        SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
+		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
+		for (int i = 0; i < inversion.length; i++)
+		{
+			controllers[i].setInverted(inversion[i]);
+		}
         this.frontLeftMotor = controllers[0];
         this.rearLeftMotor = controllers[1];
         this.frontRightMotor = controllers[2];
@@ -53,9 +57,13 @@ public class TRCMecanumDrive
      * @param motorTypes The types of speed controllers the motors are plugged into
 	 * @param swapxy Whether to swap x and y inputs for the driveCartesian method.
 	 */
-	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean swapxy)
+	public TRCMecanumDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion, boolean swapxy)
 	{
 		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
+		for (int i = 0; i < inversion.length; i++)
+		{
+			controllers[i].setInverted(inversion[i]);
+		}
         this.frontLeftMotor = controllers[0];
         this.rearLeftMotor = controllers[1];
         this.frontRightMotor = controllers[2];
