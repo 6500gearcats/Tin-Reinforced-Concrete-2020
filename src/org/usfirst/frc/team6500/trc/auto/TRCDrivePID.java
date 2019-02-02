@@ -1,3 +1,8 @@
+/*
+ *  TRCDrivePID
+ *      static class to control the Robot Drive
+ */
+
 package org.usfirst.frc.team6500.trc.auto;
 
 import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCEncoderSet;

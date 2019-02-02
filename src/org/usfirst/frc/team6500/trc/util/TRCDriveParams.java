@@ -2,11 +2,11 @@ package org.usfirst.frc.team6500.trc.util;
 
 public class TRCDriveParams
 {
-	private double x, y, z;  // 3 axis of directionality for the drive //
-	private double m;        //            Axis multiplier             //
+	private double x, y, z;  /* 3 axis of directionality for the drive */
+	private double m;        /*            Axis multiplier             */
 	
 	/**
-	 * DriveParams which will have their values set later
+	 * init a new blank TRCDriveParams that is resettable later
 	 */
 	public TRCDriveParams()
 	{
@@ -28,7 +28,7 @@ public class TRCDriveParams
 	}
 	
 	/**
-	 * DriveParams which are completely setup by the user
+	 * DriveParams which are completely setup by the user on call
 	 */
 	public TRCDriveParams(double rawX, double rawY, double rawZ, double multiplier)
 	{
