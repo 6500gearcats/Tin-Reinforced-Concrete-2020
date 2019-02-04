@@ -17,7 +17,6 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.wpilibj.RobotState;
 
-
 public class TRCDrivePID
 {
     private static final double deadband = 2.0;
@@ -79,10 +78,10 @@ public class TRCDrivePID
         switch(actionType)
         {
             case Forward:
-                driveForward();
+                driveForwardBack();
                 break;
             case Right:
-                driveRight();
+                driveLeftRight();
                 break;
             case Rotate:
                 driveRotation();
@@ -96,7 +95,7 @@ public class TRCDrivePID
     /**
      * Drive the robot forward (measurement) inches
      */
-    public static void driveForward()
+    public static void driveForwardBack()
     {
         autoSpeed.reset();
         MPID.reset();
@@ -124,13 +123,15 @@ public class TRCDrivePID
                 {
                     ((TRCDifferentialDrive) drive).arcadeDrive(smoothedSpeed, 0.0, false);
                 }
-
                 if (Math.abs(encoders.getAverageDistanceTraveled() - measurement) < deadband)
-                {
+                { // if the distance has been reached
                     deadbandcounter++;
+                } else 
+                {
+                    driving = false;
+                    return;
                 }
             }
-
             driving = false;
         }
     }
@@ -138,9 +139,9 @@ public class TRCDrivePID
     /**
      * Drive the robot right (measurement) inches (exclusive to mecanum)
      */
-    public static void driveRight()
+    public static void driveLeftRight()
     {
-        if (!driving)
+        if (!driving && driveType == DriveType.Mecanum)
         {
             autoSpeed.reset();
             MPID.reset();
@@ -158,17 +159,17 @@ public class TRCDrivePID
                 double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);
                 TRCNetworkData.updateDataPoint("PIDOutputSmoothed", smoothedSpeed);
 
-                if (driveType == DriveType.Mecanum)
-                {
-                    ((TRCMecanumDrive) drive).driveCartesian(0.0, smoothedSpeed, 0.0);
-                }
+                ((TRCMecanumDrive) drive).driveCartesian(0.0, smoothedSpeed, 0.0);
 
                 if (Math.abs(encoders.getAverageDistanceTraveled() - measurement) < deadband)
                 {
                     deadbandcounter++;
+                } else
+                {
+                    driving = false;
+                    return;
                 }
             }
-
             driving = false;
         }
     }
@@ -208,6 +209,10 @@ public class TRCDrivePID
                 if (Math.abs(gyro.getAngle() - measurement) < deadband)
                 {
                     deadbandcounter++;
+                } else
+                {
+                    driving = false;
+                    return;
                 }
             }
 
