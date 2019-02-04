@@ -65,6 +65,13 @@ public class TRCNetworkData
         vOptionsID = 0;
     }
 
+
+
+    public static NetworkTable getVisionTable()
+    {
+        return table.getSubTable("vision");
+    }
+
     public static VerbosityType getVerbosity()
     {
         return VerbosityType.Log_Debug;
