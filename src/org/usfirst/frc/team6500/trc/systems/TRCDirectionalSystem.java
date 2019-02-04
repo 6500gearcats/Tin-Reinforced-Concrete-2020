@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class TRCDirectionalSystem
 {
-	private boolean invertSide;
-	private HashMap<Integer, SpeedController> outputMotors;
-	private double defaultForwardSpeed, defaultReverseSpeed;
+	protected boolean invertSide;
+	protected HashMap<Integer, SpeedController> outputMotors;
+	protected double defaultForwardSpeed, defaultReverseSpeed;
 	
 	/**
 	 * Wrap up a game-specific system of a robot into an easy-to-manage way.  The methods for control within the object shouldn't be used outright;
