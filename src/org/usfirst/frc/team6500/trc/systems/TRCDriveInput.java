@@ -70,7 +70,7 @@ public class TRCDriveInput
 	 * @param buttons Buttons to bind to
 	 * @param func Function to be run
 	 */
-	public static void bindButtonAbsense(int joystickPort, int[] buttons, Runnable func)
+	public static void bindButtonAbsence(int joystickPort, int[] buttons, Runnable func)
 	{
 		absenseFuncs.get(joystickPort).put(buttons, func);
 		TRCNetworkData.logString(VerbosityType.Log_Debug, "An absence binding has been created for " + buttons.length + "buttons on Joystick " + joystickPort);
