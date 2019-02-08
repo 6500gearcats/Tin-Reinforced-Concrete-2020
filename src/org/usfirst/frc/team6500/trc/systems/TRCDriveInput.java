@@ -1,5 +1,11 @@
+/*
+ *	TRCDriveInput
+ * 		totally static class to handle input from the joysticks
+ */
+
 package org.usfirst.frc.team6500.trc.systems;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
@@ -10,9 +16,12 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class TRCDriveInput
 {
-	private static HashMap<Integer, Joystick> inputSticks;
-    private static HashMap<Integer, HashMap<Integer, Runnable>> buttonFuncs; 
-    private static HashMap<Integer, HashMap<int[], Runnable>> absenceFuncs; // oh god why does this work
+	private static ArrayList<Joystick> inputSticks;
+	// private static HashMap<Integer, Joystick> inputSticks; removed this because you can just <joystick>.getPort()
+
+    private static HashMap<Integer, HashMap<Integer, Runnable>> pressFuncs; 
+	private static HashMap<Integer, HashMap<int[], Runnable>> absenseFuncs; // oh god why does this work
+	/* Array in a HashMap in a HashMap... */
 	private static double baseSpeed = 0.0;
     private static double boostSpeed = 0.0;
     
@@ -24,16 +33,15 @@ public class TRCDriveInput
 	 */
 	public static void initializeDriveInput(int[] ports, double speedBase, double speedBoost)
 	{
-		inputSticks = new HashMap<Integer, Joystick>();
-		buttonFuncs = new HashMap<Integer, HashMap<Integer, Runnable>>();
-		
-		absenceFuncs = new HashMap<Integer, HashMap<int[], Runnable>>();
+		inputSticks = new ArrayList<Joystick>();
+		pressFuncs = new HashMap<Integer, HashMap<Integer, Runnable>>();
+		absenseFuncs = new HashMap<Integer, HashMap<int[], Runnable>>();
 
 		for (int port : ports)
 		{
-			inputSticks.put(port, new Joystick(port));
-			buttonFuncs.put(port, new HashMap<Integer, Runnable>());
-			absenceFuncs.put(port, new HashMap<int[], Runnable>());
+			inputSticks.add(new Joystick(port));
+			pressFuncs.put(port, new HashMap<Integer, Runnable>());
+			absenseFuncs.put(port, new HashMap<int[], Runnable>());
 		}
 		
         baseSpeed = speedBase;
@@ -49,9 +57,9 @@ public class TRCDriveInput
 	 * @param button Button to bind to
 	 * @param func Function to be run
 	 */
-	public static void bindButton(int joystickPort, int button, Runnable func)
+	public static void bindButtonPress(int joystickPort, int button, Runnable func)
 	{
-		buttonFuncs.get(joystickPort).put(button, func);
+		pressFuncs.get(joystickPort).put(button, func);
 		TRCNetworkData.logString(VerbosityType.Log_Debug, "A binding has been created for Button " + button + " on Joystick " + joystickPort);
     }
     
@@ -64,7 +72,7 @@ public class TRCDriveInput
 	 */
 	public static void bindButtonAbsence(int joystickPort, int[] buttons, Runnable func)
 	{
-		absenceFuncs.get(joystickPort).put(buttons, func);
+		absenseFuncs.get(joystickPort).put(buttons, func);
 		TRCNetworkData.logString(VerbosityType.Log_Debug, "An absence binding has been created for " + buttons.length + "buttons on Joystick " + joystickPort);
 	}
 	
@@ -72,38 +80,40 @@ public class TRCDriveInput
 	 * Checks every button on every Joystick, and if the button is pressed and has a function bound to it then
 	 * the function will be run
 	 */
-	public static void updateDriveInput()
+	public static void updateBindings()
 	{
-		for (Integer stickPort : inputSticks.keySet())
+		for (int index = 0; index < inputSticks.size(); index++) // get all input sticks (2; gunner and driver)
 		{
-			if (buttonFuncs.containsKey(stickPort))
+			int stickPort = inputSticks.get(index).getPort(); // get the port of that joystick
+
+			if (pressFuncs.containsKey(stickPort)) // if the joystick is supported on pressFuncs
 			{
-				for (int button = 1; button < inputSticks.get(stickPort).getButtonCount(); button++)
+				for (Integer button : pressFuncs.get(stickPort).keySet()) // get all supported buttons in pressFuncs
 				{
-					if (inputSticks.get(stickPort).getRawButton(button) && buttonFuncs.get(stickPort).containsKey(button)) // Simply put, is the button pressed && is there are function bound to it
+					if (inputSticks.get(stickPort).getRawButton(button)) // if the button is pressed, run it's runnable
 					{
-						buttonFuncs.get(inputSticks.get(stickPort).getPort()).get(button).run();
+						pressFuncs.get(stickPort).get(button).run(); // RUN!
 					}
 				}
 			}
 			
-			if (absenceFuncs.containsKey(stickPort))
+			if (absenseFuncs.containsKey(stickPort)) // if the joystick is supported on absenseFuncs
 			{
-            	for (int[] buttonList : absenceFuncs.get(stickPort).keySet())
+            	for (int[] buttonList : absenseFuncs.get(stickPort).keySet()) // get all supported buttons in absenseFuncs
 				{
-					for (int i = 0; i < buttonList.length; i++)
+					for (int i = 0; i < buttonList.length; i++) // check all buttons in the button list
 					{
-						if (!inputSticks.get(stickPort).getRawButton(buttonList[i]))
+						if (!inputSticks.get(stickPort).getRawButton(buttonList[i])) // if the button is not pressed...
 						{
 							if (i == buttonList.length - 1)
 							{
-								absenceFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
+								absenseFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
 								break;
 							}
 							continue;
 						}
 						break;
-					}
+					} // OK, this method seems useless as it only activates the last button in the button set........
 				}
 			}
 		}
@@ -138,7 +148,8 @@ public class TRCDriveInput
 	 * @param joystick The joystick get throttle value from
 	 * @return The simplified throttle value
 	 */
-	public static double getThrottle(int joystickPort) {
+	public static double getThrottle(int joystickPort) 
+	{
 		double multiplier;
 		
 		multiplier = getRawThrottle(joystickPort) + 1;        // Range is -1 to 1, change to 0 to 2 cuz its easier to work with
@@ -176,13 +187,13 @@ public class TRCDriveInput
 	 */
 	public static TRCDriveParams getStickDriveParams(int joystickPort)
 	{
-		TRCDriveParams drivepars = new TRCDriveParams();
+		TRCDriveParams params = new TRCDriveParams();
 		
-		drivepars.setRawX(inputSticks.get(joystickPort).getX());
-		drivepars.setRawY(inputSticks.get(joystickPort).getY());
-		drivepars.setRawZ(inputSticks.get(joystickPort).getZ());
-		drivepars.setM(getThrottle(joystickPort));
+		params.setRawX(inputSticks.get(joystickPort).getX());
+		params.setRawY(inputSticks.get(joystickPort).getY());
+		params.setRawZ(inputSticks.get(joystickPort).getZ());
+		params.setM(getThrottle(joystickPort));
 		
-		return drivepars;
+		return params;
 	}
 }

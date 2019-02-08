@@ -54,6 +54,7 @@ public class TRCGyroBase extends GyroBase
 		}
 		catch (Exception e)
 		{
+			TRCNetworkData.logString(VerbosityType.Log_Error, "Gyro " + this.toString() + " failed to calibrate.");
 			return;
 		}
 	}

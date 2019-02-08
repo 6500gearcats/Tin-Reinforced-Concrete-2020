@@ -16,7 +16,7 @@ public class TRCSpeed
 	 * Calculate a new speed value from the raw value and multiplier, taking into account the distance from the previous
 	 * values to reduce jerk
 	 * 
-	 * @param raw The raw speed value from the source
+	 * @param raw The target raw speed value from the source
 	 * @param multiplier The value to multiply the raw value by before doing other calculations; if not using this for drivetrain functions use the version without it
 	 * @return Smoothed speed value, equivalent to (previousSpeed + (raw * multiplier)) / 2
 	 */
@@ -24,6 +24,7 @@ public class TRCSpeed
 	{
 		double calculated = raw;
 		
+		if (multiplier == 0) multiplier = 1;
 		calculated *= multiplier;
 		
 		if (Math.abs(calculated - this.previousSpeed) > differenceDeadband)

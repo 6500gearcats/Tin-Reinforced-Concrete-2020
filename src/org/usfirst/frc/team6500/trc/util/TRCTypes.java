@@ -116,9 +116,10 @@ public class TRCTypes
 		// Legacy method for use with methods that interpret position as a boolean "isLeft"
 		public static boolean toBoolean(Position side)
 		{
-			if(side == Position.Left)       { return true;  }
-			else if(side == Position.Right) { return false; }
-			else                            { return false; }
+			// this formatting tho...
+			     if (side == Position.Left)  { return true;  }
+			else if (side == Position.Right) { return false; }
+			else                             { return false; }
 		}
 	}
 
