@@ -24,7 +24,6 @@ public class TRCSpeed
 	{
 		double calculated = raw;
 		
-		if (multiplier == 0) multiplier = 1;
 		calculated *= multiplier;
 		
 		if (Math.abs(calculated - this.previousSpeed) > differenceDeadband)

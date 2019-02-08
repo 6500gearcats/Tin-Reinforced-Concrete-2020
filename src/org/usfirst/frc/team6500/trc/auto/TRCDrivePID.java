@@ -141,7 +141,7 @@ public class TRCDrivePID
      */
     public static void driveLeftRight()
     {
-        if (!driving && driveType == DriveType.Mecanum)
+        if (!driving && driveType == DriveType.Mecanum) // Don't run this if not Mecanum!!
         {
             autoSpeed.reset();
             MPID.reset();

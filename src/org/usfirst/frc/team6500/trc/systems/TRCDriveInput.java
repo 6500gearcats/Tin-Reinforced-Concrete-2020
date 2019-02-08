@@ -20,7 +20,7 @@ public class TRCDriveInput
 	// private static HashMap<Integer, Joystick> inputSticks; removed this because you can just <joystick>.getPort()
 
     private static HashMap<Integer, HashMap<Integer, Runnable>> pressFuncs; 
-	private static HashMap<Integer, HashMap<int[], Runnable>> absenseFuncs; // oh god why does this work
+	private static HashMap<Integer, HashMap<int[], Runnable>> absenceFuncs; // oh god why does this work  // spelled "absence", not "absense" :P
 	/* Array in a HashMap in a HashMap... */
 	private static double baseSpeed = 0.0;
     private static double boostSpeed = 0.0;
@@ -35,13 +35,13 @@ public class TRCDriveInput
 	{
 		inputSticks = new ArrayList<Joystick>();
 		pressFuncs = new HashMap<Integer, HashMap<Integer, Runnable>>();
-		absenseFuncs = new HashMap<Integer, HashMap<int[], Runnable>>();
+		absenceFuncs = new HashMap<Integer, HashMap<int[], Runnable>>();
 
 		for (int port : ports)
 		{
 			inputSticks.add(new Joystick(port));
 			pressFuncs.put(port, new HashMap<Integer, Runnable>());
-			absenseFuncs.put(port, new HashMap<int[], Runnable>());
+			absenceFuncs.put(port, new HashMap<int[], Runnable>());
 		}
 		
         baseSpeed = speedBase;
@@ -72,7 +72,7 @@ public class TRCDriveInput
 	 */
 	public static void bindButtonAbsence(int joystickPort, int[] buttons, Runnable func)
 	{
-		absenseFuncs.get(joystickPort).put(buttons, func);
+		absenceFuncs.get(joystickPort).put(buttons, func);
 		TRCNetworkData.logString(VerbosityType.Log_Debug, "An absence binding has been created for " + buttons.length + "buttons on Joystick " + joystickPort);
 	}
 	
@@ -80,7 +80,7 @@ public class TRCDriveInput
 	 * Checks every button on every Joystick, and if the button is pressed and has a function bound to it then
 	 * the function will be run
 	 */
-	public static void updateBindings()
+	public static void checkButtonBindings()
 	{
 		for (int index = 0; index < inputSticks.size(); index++) // get all input sticks (2; gunner and driver)
 		{
@@ -97,9 +97,9 @@ public class TRCDriveInput
 				}
 			}
 			
-			if (absenseFuncs.containsKey(stickPort)) // if the joystick is supported on absenseFuncs
+			if (absenceFuncs.containsKey(stickPort)) // if the joystick is supported on absenceFuncs
 			{
-            	for (int[] buttonList : absenseFuncs.get(stickPort).keySet()) // get all supported buttons in absenseFuncs
+            	for (int[] buttonList : absenceFuncs.get(stickPort).keySet()) // get all supported buttons in absenceFuncs
 				{
 					for (int i = 0; i < buttonList.length; i++) // check all buttons in the button list
 					{
@@ -107,13 +107,14 @@ public class TRCDriveInput
 						{
 							if (i == buttonList.length - 1)
 							{
-								absenseFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
+								absenceFuncs.get(inputSticks.get(stickPort).getPort()).get(buttonList).run();
 								break;
 							}
 							continue;
 						}
 						break;
-					} // OK, this method seems useless as it only activates the last button in the button set........
+					} // This part of the function runs through all of the absence bindings for all joysticks,
+					  // and if after going through all of them not being pressed on the last one it activates the bound function
 				}
 			}
 		}
