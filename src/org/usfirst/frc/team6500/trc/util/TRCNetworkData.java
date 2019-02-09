@@ -74,18 +74,17 @@ public class TRCNetworkData
 
     public static VerbosityType getVerbosity()
     {
-        return VerbosityType.Log_Debug;
-        // switch (getSelection(vOptionsID))
-        // {
-        //     case 0:
-        //         return VerbosityType.Log_Debug;
-        //     case 1:
-        //         return VerbosityType.Log_Info;
-        //     case 2:
-        //         return VerbosityType.Log_Error;
-        //     default:
-        //         return null;
-        // }
+        switch (getSelection(vOptionsID))
+        {
+            case 0:
+                return VerbosityType.Log_Debug;
+            case 1:
+                return VerbosityType.Log_Info;
+            case 2:
+                return VerbosityType.Log_Error;
+            default:
+                return VerbosityType.Log_Debug;
+        }
     }
 
     /**

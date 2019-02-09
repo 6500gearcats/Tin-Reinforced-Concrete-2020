@@ -157,16 +157,18 @@ public class TRCEncoderSet
 	
 	/**
 	 * Use this method after driving in a straight line to calibrate them to account for mechanical irregularities
+	 * 
+	 * Untested.
 	 */
-	public void uniformCalibrateDistancePerPulse()
-	{
-		double averageDistanceTraveled = this.getAverageDistanceTraveled();
+	// public void uniformCalibrateDistancePerPulse()
+	// {
+	// 	double averageDistanceTraveled = this.getAverageDistanceTraveled();
 		
-		// for (TRCEncoder encoder : this.internalEncoders)
-		// {
-		// 	encoder.setDistancePerPulse(encoder.getDistancePerPulse() * averageDistanceTraveled / encoder.getDistance());
-		// }
+	// 	// for (TRCEncoder encoder : this.internalEncoders)
+	// 	// {
+	// 	// 	encoder.setDistancePerPulse(encoder.getDistancePerPulse() * averageDistanceTraveled / encoder.getDistance());
+	// 	// }
 
-		TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been calibrated");
-	}
+	// 	TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been calibrated");
+	// }
 }
