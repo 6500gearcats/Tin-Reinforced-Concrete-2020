@@ -1,3 +1,8 @@
+/*
+ *  TRCNetworkData
+ *      totally static class for inputing and outputing network data
+ */
+
 package org.usfirst.frc.team6500.trc.util;
 
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DataInterfaceType;
@@ -26,7 +31,6 @@ public class TRCNetworkData
     private static HashMap<String, NetworkTableEntry> dataPoints;
 
     private static int vOptionsID;
-
 
     /**
      * Setup the sending of data to the driver station specifing with DIType how it should be done.
@@ -59,7 +63,7 @@ public class TRCNetworkData
 
         String verbosityOptions[] = new String[3];
         verbosityOptions[0] = "Debug (All Messages)";
-        verbosityOptions[1] = "Info. (Limited Messages)";
+        verbosityOptions[1] = " Info (Limited Messages)";
         verbosityOptions[2] = "Error (Critical Messages)";
         putOptions(verbosityOptions, 0);
         vOptionsID = 0;
@@ -96,9 +100,7 @@ public class TRCNetworkData
     public static void logString(VerbosityType v, String logData)
     {
         if (getVerbosity().ordinal() > v.ordinal())
-        {
             return;
-        }
 
         String oldLog = logEntry.getString("");
 

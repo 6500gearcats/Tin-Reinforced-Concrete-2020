@@ -301,7 +301,7 @@ public class MiniPID{
 		output=Foutput + Poutput + Ioutput + Doutput;
 
 		// Figure out what we're doing with the error.
-		if(minOutput!=maxOutput && !bounded(output, minOutput,maxOutput) ){
+		if(minOutput!=maxOutput && !bounded(output, minOutput, maxOutput)){
 			errorSum=error; 
 			// reset the error sum to a sane level
 			// Setting to current error ensures a smooth transition when the P term 
@@ -326,7 +326,7 @@ public class MiniPID{
 		}
 		if(minOutput!=maxOutput){ 
 			output=constrain(output, minOutput,maxOutput);
-			}
+		}
 		if(outputFilter!=0){
 			output=lastOutput*outputFilter+output*(1-outputFilter);
 		}
