@@ -54,8 +54,6 @@ public class TRCDrivePID
         driveType = driveBaseType;
         maxSpeed = topSpeed;
 
-        gyro.calibrate();
-
         TRCNetworkData.logString(VerbosityType.Log_Info, "DrivePID is online.");
         TRCNetworkData.createDataPoint("PIDSetpoint");
         TRCNetworkData.createDataPoint("PIDOutput");
@@ -75,7 +73,7 @@ public class TRCDrivePID
         measurement = unit;
 
         autoSpeed = new TRCSpeed();
-        MPID = new MiniPID(-1.0, 0.0, 0.0);
+        MPID = new MiniPID(1.0, 0.0, 0.0);
 
         switch(actionType)
         {
@@ -125,11 +123,13 @@ public class TRCDrivePID
                 {
                     ((TRCDifferentialDrive) drive).arcadeDrive(smoothedSpeed, 0.0, false);
                 }
+
                 if (Math.abs(encoders.getAverageDistanceTraveled() - measurement) < deadband)
                 {
                     deadbandcounter++;
                 }
             }
+
             driving = false;
         }
     }
@@ -156,7 +156,7 @@ public class TRCDrivePID
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
                 double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);
                 TRCNetworkData.updateDataPoint("PIDOutputSmoothed", smoothedSpeed);
-
+                
                 ((TRCMecanumDrive) drive).driveCartesian(0.0, smoothedSpeed, 0.0);
 
                 if (Math.abs(encoders.getAverageDistanceTraveled() - measurement) < deadband)
@@ -164,6 +164,7 @@ public class TRCDrivePID
                     deadbandcounter++;
                 }
             }
+            
             driving = false;
         }
     }
@@ -205,6 +206,7 @@ public class TRCDrivePID
                     deadbandcounter++;
                 }
             }
+
             driving = false;
         }
     }
