@@ -105,7 +105,45 @@ public class TRCTypes
 		Log_Info,
 		Log_Error,
 	}
+
+	// Types of controllers
+	public enum ControllerType
+	{
+		Xbox360,    // Microsoft XBox 360 wired controller
+		Extreme3D,  // Logitech Extreme 3D Joystick, included in KoP
+		Generic,    // Any other basic HID compliant joystick
+	}
+
+	// Types of buttons on an Xbox controller (these are precisely accurate to the hid output from the controller, don't edit them)
+	public enum XboxButtonType
+	{
+		A,
+		B,
+		X,
+		Y,
+		LeftBumper,
+		RightBumper,
+		Back,
+		Start,
+		LeftStick,
+		RightStick,
+	}
+
+	// Types of buttons on a controller
+	public enum ControllerButtonType
+	{
+		Xbox,
+		Generic,
+	}
+
+	// Types of directions the robot can move, for use with the encoders
+	public enum DirectionType
+	{
+		ForwardBackward,
+		LeftRight,
+	}
 	
+
 	// Positions a robot can start in at the beginning of a match
 	public enum Position
 	{

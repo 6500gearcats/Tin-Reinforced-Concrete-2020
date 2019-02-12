@@ -12,7 +12,7 @@ import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
-import edu.wpi.first.wpilibj.Joystick;
+
 
 public class TRCDriveInput
 {

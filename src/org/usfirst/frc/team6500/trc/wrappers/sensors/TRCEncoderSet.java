@@ -3,6 +3,7 @@ package org.usfirst.frc.team6500.trc.wrappers.sensors;
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCTypes;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.DirectionType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.EncoderType;;
 
 public class TRCEncoderSet
@@ -86,13 +87,36 @@ public class TRCEncoderSet
 				((TRCTalonEncoder) this.internalEncoders[encodernum]).reset();
 			}
 	}
+
+	private static double getDirectionalDistance (DirectionType direction, double originalDistance, int wheelNum)
+	{
+		switch(direction)
+		{
+			case ForwardBackward:
+				return originalDistance;
+			case LeftRight:
+				switch (wheelNum)
+				{
+					case 0:
+					case 3:
+						return originalDistance;
+					case 1:
+					case 2:
+						return -originalDistance;
+					default:
+						return 0.0;
+				}
+			default:
+				return 0.0;
+		}
+	}
 	
 	/**
 	 * Gives the average distance all encoders have traveled
 	 * 
 	 * @return The average of the distance traveled by all the encoders
 	 */
-	public double getAverageDistanceTraveled()
+	public double getAverageDistanceTraveled(DirectionType direction)
 	{
 		double distancesum = 0.0;
 		
@@ -100,11 +124,11 @@ public class TRCEncoderSet
 		{
 			if (this.types[i] == EncoderType.Digital)
 			{
-				distancesum += ((TRCEncoder) this.internalEncoders[i]).getDistance();
+				distancesum += getDirectionalDistance(direction, ((TRCEncoder) this.internalEncoders[i]).getDistance(), i);
 			}
 			else
 			{
-				distancesum += ((TRCTalonEncoder) this.internalEncoders[i]).getDistance();
+				distancesum += getDirectionalDistance(direction, ((TRCTalonEncoder) this.internalEncoders[i]).getDistance(), i);
 			}
 		}
 		
