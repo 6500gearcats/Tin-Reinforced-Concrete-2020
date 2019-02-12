@@ -2,6 +2,7 @@ package org.usfirst.frc.team6500.trc.util;
 
 
 import org.usfirst.frc.team6500.trc.util.TRCTypes.ControllerType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.XboxAxisType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.ControllerButtonType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.XboxButtonType;
 
@@ -119,8 +120,166 @@ public class TRCController
         }
     }
 
-    public double getXboxAxis()
+    public double getAxis(XboxAxisType axis)
     {
-
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getRawAxis(axis.ordinal());
+            default:
+                return 0.0;
+        }
     }
+
+    public double getAxis(int axis)
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getRawAxis(axis);
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getRawAxis(axis);
+            default:
+                return 0.0;
+        }
+    }
+
+    public int getPOV()
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getPOV();
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getPOV();
+            default:
+                return 0;
+        }
+    }
+
+    public ControllerType getType()
+    {
+        return this.controllerType;
+    }
+
+    public double getX()
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getX();
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getX();
+            default:
+                return 0;
+        }
+    }
+
+    public double getX(Hand hand)
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getX(hand);
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getX(hand);
+            default:
+                return 0;
+        }
+    }
+
+    public double getY()
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getY();
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getY();
+            default:
+                return 0;
+        }
+    }
+
+    public double getY(Hand hand)
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getY(hand);
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getY(hand);
+            default:
+                return 0;
+        }
+    }
+
+    public double getZ()
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getX(Hand.kLeft);
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getZ();
+            default:
+                return 0;
+        }
+    }
+
+    public double getZ(Hand hand)
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getX(hand);
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getZ();
+            default:
+                return 0;
+        }
+    }
+    
+    public double getThrottle()
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getTriggerAxis(Hand.kRight);
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getX();
+            default:
+                return 0;
+        }
+    }
+
+    public double getTrigger(Hand hand)
+    {
+        switch (this.controllerType)
+        {
+            case Xbox360:
+                return this.xboxController.getTriggerAxis(hand);
+            case Extreme3D: // Falls through
+            case Generic:
+                return this.stickController.getThrottle();
+            default:
+                return 0;
+        }
+    }
+
+    public int getPort() { return this.port; }
+
+
+    // Only use these while double checking the type of the controller before doing anything... otherwise null pointers!
+    public Joystick getStick() { return this.stickController; }
+    public XboxController getXbox() { return this.xboxController; }
 }

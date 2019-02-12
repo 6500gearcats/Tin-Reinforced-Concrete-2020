@@ -114,7 +114,7 @@ public class TRCTypes
 		Generic,    // Any other basic HID compliant joystick
 	}
 
-	// Types of buttons on an Xbox controller (these are precisely accurate to the hid output from the controller, don't edit them)
+	// Types of buttons on an Xbox controller (these are precisely accurate to the HID output from the controller, don't edit them)
 	public enum XboxButtonType
 	{
 		A,
@@ -127,6 +127,17 @@ public class TRCTypes
 		Start,
 		LeftStick,
 		RightStick,
+	}
+
+	// Types of axis of an Xbox controller (these are precisely accurate to the HID output from the controller, don't edit them)
+	public enum XboxAxisType
+	{
+		LeftX,
+		LeftY,
+		LeftTrigger,
+		RightTrigger,
+		RightX,
+		RightY,
 	}
 
 	// Types of buttons on a controller
