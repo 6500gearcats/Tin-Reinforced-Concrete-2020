@@ -78,6 +78,7 @@ public class TRCNetworkData
 
     public static VerbosityType getVerbosity()
     {
+        try {
         switch (getSelection(vOptionsID))
         {
             case 0:
@@ -88,6 +89,11 @@ public class TRCNetworkData
                 return VerbosityType.Log_Error;
             default:
                 return VerbosityType.Log_Debug;
+        }
+        }
+        catch (Exception e)
+        {
+            return VerbosityType.Log_Debug;
         }
     }
 

@@ -256,7 +256,7 @@ public class TRCController
                 return this.xboxController.getTriggerAxis(Hand.kRight);
             case Extreme3D: // Falls through
             case Generic:
-                return this.stickController.getX();
+                return this.stickController.getThrottle();
             default:
                 return 0;
         }
