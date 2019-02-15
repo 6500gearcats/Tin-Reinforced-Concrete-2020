@@ -134,6 +134,11 @@ public class TRCDriveInput
 	{
 		return inputSticks.get(joystickPort).getButton(button);
 	}
+
+	public static TRCController getController(int joystickPort)
+	{
+		return inputSticks.get(joystickPort);
+	}
 	
 	/**
 	 * Get the POV (D-Pad or thumbstick) position from a joystick
