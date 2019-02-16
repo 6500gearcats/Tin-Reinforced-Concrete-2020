@@ -23,7 +23,7 @@ public class TRCPneumaticSystem
      * 
      * @param id PCM's CAN id
      */
-    public void setupPneumatics(int id)
+    public static void setupPneumatics(int id)
     {
         pcmId = id;
         compressor = new Compressor(pcmId);
