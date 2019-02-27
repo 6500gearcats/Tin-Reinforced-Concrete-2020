@@ -73,6 +73,7 @@ public class TRCController
         switch (this.controllerButtonType)
         {
             case Generic:
+                //System.out.println(Integer.toString(button) + Boolean.toString(this.stickController.getRawButton(button)));
                 return this.stickController.getRawButton(button);
             case Xbox:
                 return this.xboxController.getRawButton(button);

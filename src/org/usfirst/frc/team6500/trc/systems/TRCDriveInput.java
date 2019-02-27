@@ -94,7 +94,7 @@ public class TRCDriveInput
 				{
 					if (inputSticks.get(stickPort).getButton(button)) // if the button is pressed, run it's runnable
 					{
-						System.out.println(button);
+						//System.out.println(button);
 						pressFuncs.get(stickPort).get(button).run(); // RUN!
 					}
 				}

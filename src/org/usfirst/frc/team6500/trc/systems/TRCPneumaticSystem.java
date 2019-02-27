@@ -1,12 +1,15 @@
 package org.usfirst.frc.team6500.trc.systems;
 
+
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
+
 
 public class TRCPneumaticSystem
 {
@@ -47,7 +50,7 @@ public class TRCPneumaticSystem
 		for (int i = 0; i < solenoidPorts.length; i++)
 		{
 			this.outputSolenoids.put(solenoidPorts[i], new Solenoid(pcmId, solenoidPorts[i]));
-		}
+        }
         
         
 		this.doubleReverse = secondReverse;
@@ -69,27 +72,32 @@ public class TRCPneumaticSystem
 	 */
 	public void fullClose()
 	{
+        Iterator<Integer> ports = this.outputSolenoids.keySet().iterator();
+
         if (this.outputSolenoids.size() % 2 == 0)
         {
             for (int i = 0; i < this.outputSolenoids.size(); i += 2)
             {
+                int port = ports.next();
+                int port2 = ports.next();
                 if (this.doubleReverse)
                 {
-                    this.outputSolenoids.get(i).set(false);
-                    this.outputSolenoids.get(i + 1).set(true);
+                    this.outputSolenoids.get(port).set(false);
+                    this.outputSolenoids.get(port2).set(true);
                 }
                 else
                 {
-                    this.outputSolenoids.get(i).set(false);
-                    this.outputSolenoids.get(i + 1).set(false);
+                    this.outputSolenoids.get(port).set(false);
+                    this.outputSolenoids.get(port2).set(false);
                 }
             }
         }
         else
         {
-            for (int i = 0; i < this.outputSolenoids.size(); i ++)
+            for (int i = 0; i < this.outputSolenoids.size(); i++)
             {
-                this.outputSolenoids.get(i).set(false);
+                int port = ports.next();
+                this.outputSolenoids.get(port).set(false);
             }
         }
 
@@ -101,27 +109,32 @@ public class TRCPneumaticSystem
 	 */
 	public void fullOpen()
 	{
+        Iterator<Integer> ports = this.outputSolenoids.keySet().iterator();
+
         if (this.outputSolenoids.size() % 2 == 0)
         {
             for (int i = 0; i < this.outputSolenoids.size(); i += 2)
             {
+                int port = ports.next();
+                int port2 = ports.next();
                 if (this.doubleReverse)
                 {
-                    this.outputSolenoids.get(i).set(true);
-                    this.outputSolenoids.get(i).set(false);
+                    this.outputSolenoids.get(port).set(true);
+                    this.outputSolenoids.get(port2).set(false);
                 }
                 else
                 {
-                    this.outputSolenoids.get(i).set(true);
-                    this.outputSolenoids.get(i + 1).set(true);
+                    this.outputSolenoids.get(port).set(true);
+                    this.outputSolenoids.get(port2).set(true);
                 }
             }
         }
         else
         {
-            for (int i = 0; i < this.outputSolenoids.size(); i ++)
+            for (int i = 0; i < this.outputSolenoids.size(); i++)
             {
-                this.outputSolenoids.get(i).set(true);
+                int port = ports.next();
+                this.outputSolenoids.get(port).set(true);
             }
         }
 
