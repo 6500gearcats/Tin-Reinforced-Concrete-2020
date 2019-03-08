@@ -7,6 +7,7 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.UsbCameraInfo;
+import edu.wpi.first.wpilibj.CameraServer;
 
 /**
  * Class to setup and modify the camera.  The parameters at the top of the file (fps, width, height)
@@ -26,8 +27,9 @@ public class TRCCamera
      */
     public static void initializeCamera()
     {
-        UsbCameraInfo cameraInfo = CameraServerJNI.enumerateUsbCameras()[0];
-        camera = new UsbCamera(cameraInfo.name, cameraInfo.path);
+        //UsbCameraInfo cameraInfo = CameraServerJNI.enumerateUsbCameras()[0];
+        //camera = new UsbCamera(cameraInfo.name, cameraInfo.path);
+        camera = CameraServer.getInstance().startAutomaticCapture();
 		camera.setFPS(fps);
         camera.setResolution(width, height);
         camera.setExposureAuto();
