@@ -22,6 +22,7 @@ public class TRCController
     public TRCController(int port, ControllerType type)
     {
         this.controllerType = type;
+        this.port = port;
 
         switch (controllerType)
         {

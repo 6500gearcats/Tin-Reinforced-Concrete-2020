@@ -1,10 +1,10 @@
 plugins {
     id "java-library"
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.2.1"
+    id "edu.wpi.first.GradleRIO" version "2019.4.1"
 }
 
-version = "2019.0.6"
+version = "2019.1.0"
 
 dependencies {
     compile wpi.deps.wpilib()

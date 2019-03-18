@@ -11,6 +11,7 @@ public class TRCSpeed
 {
 	private static final double differenceDeadband = 0.05;
 	private double previousSpeed = 0.0;
+	private double calculationTime = 0.0;
 	
 	/**
 	 * Calculate a new speed value from the raw value and multiplier, taking into account the distance from the previous
@@ -26,9 +27,10 @@ public class TRCSpeed
 		
 		calculated *= multiplier;
 		
-		if (Math.abs(calculated - this.previousSpeed) > differenceDeadband)
+		if (Math.abs(calculated - this.previousSpeed) > differenceDeadband && (calculationTime - System.currentTimeMillis()) > 50)
 		{
 			calculated = (calculated + this.previousSpeed) / 2;
+			calculationTime = System.currentTimeMillis();
 		}
 		
 		this.previousSpeed = calculated;
