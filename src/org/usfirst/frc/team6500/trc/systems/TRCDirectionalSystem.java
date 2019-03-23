@@ -8,16 +8,7 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes;
 
-import edu.wpi.first.wpilibj.DMC60;
-import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SD540;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.VictorSP;
 
 public class TRCDirectionalSystem
 {

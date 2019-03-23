@@ -161,17 +161,28 @@ public class TRCDriveInput
 	{
 		double multiplier;
 		
-		multiplier = getRawThrottle(joystickPort) + 1;        // Range is -1 to 1, change to 0 to 2 cuz its easier to work with
-		multiplier = multiplier / 2;                          // Reduce to a scale between 0 to 1
-        multiplier = 1 - multiplier;                          // Throttle is backwards from expectation, flip it
-        if (!inputSticks.get(joystickPort).getButton(1))
-        {
-            multiplier = multiplier * baseSpeed;              // Mix in some of that sweet default...
-        }
-        else
-        {
-            multiplier = multiplier * boostSpeed;             // Unless the trigger is pressed, then mix in some of that sweet boost :)
-        }
+		if (inputSticks.get(joystickPort).getType() == ControllerType.Extreme3D || inputSticks.get(joystickPort).getType() == ControllerType.Generic)
+		{
+			multiplier = getRawThrottle(joystickPort) + 1;        // Range is -1 to 1, change to 0 to 2 cuz its easier to work with
+			multiplier = multiplier / 2;                          // Reduce to a scale between 0 to 1
+			multiplier = 1 - multiplier;                          // Throttle is backwards from expectation, flip it
+			if (!inputSticks.get(joystickPort).getButton(1))
+			{
+				multiplier = multiplier * baseSpeed;              // Mix in some of that sweet default...
+			}
+			else
+			{
+				multiplier = multiplier * boostSpeed;             // Unless the trigger is pressed, then mix in some of that sweet boost :)
+			}
+		}
+		else if (inputSticks.get(joystickPort).getType() == ControllerType.Xbox360)
+		{
+			multiplier = 1 - getRawThrottle(joystickPort);
+		}
+		else
+		{
+			multiplier = getRawThrottle(joystickPort);
+		}
 		
 		return multiplier;
 	}
