@@ -1,5 +1,6 @@
 package org.usfirst.frc.team6500.trc.wrappers.systems.drives;
 
+import org.usfirst.frc.team6500.trc.auto.TRCDriveSync;
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes;
@@ -81,6 +82,7 @@ public class TRCMecanumDrive
 	 */
 	public void driveCartesian(TRCDriveParams dps)
 	{
+		TRCDriveSync.assertTeleop();
 		this.driveCartesian(dps.getRealY(), dps.getRealX(), dps.getRealZ());
 	}
 	
@@ -89,6 +91,7 @@ public class TRCMecanumDrive
 	 */
 	public void driveCartesian(double ySpeed, double xSpeed, double zRotation)
 	{
+		TRCDriveSync.assertTeleop();
 		if (this.xyswap)
 		{
 			drive.driveCartesian(xSpeed, -ySpeed, zRotation);
@@ -107,6 +110,7 @@ public class TRCMecanumDrive
 	 */
 	public void driveWheel(MotorType wheel, double power)
 	{
+		TRCDriveSync.assertTeleop();
 		switch(wheel)
 		{
 		case kFrontLeft:

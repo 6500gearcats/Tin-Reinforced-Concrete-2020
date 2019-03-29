@@ -83,12 +83,37 @@ public class TRCTypes
 		Close,
 	}
 
-	// Types of actions a drivetrain can execute in autonomous
+	// Types of actions a drivetrain can execute in autonomous for pid
 	public enum DriveActionType
 	{
 		Forward,
 		Right,
 		Rotate,
+	}
+
+	// Types of actions a drivetrain can execute in autonomous for continuous
+	public enum DriveContinuousActionType
+	{
+		Stop,
+		ForwardRight,
+		Right,
+		ReverseRight,
+		Reverse,
+		ReverseLeft,
+		Left,
+		ForwardLeft,
+		RotateRight,
+		RotateLeft,
+		Reserved10,
+		Reserved11,
+		Forward,
+	}
+
+	public enum DriveSyncState
+	{
+		Teleop,
+		DrivePID,
+		DriveContinuous,
 	}
 
 	// Types of ways data can be sent to the driver station from the rio

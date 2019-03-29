@@ -1,9 +1,5 @@
-/*
- *  TRCDrivePID
- *      static class to control the Robot Drive
- */
-
 package org.usfirst.frc.team6500.trc.auto;
+
 
 import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCEncoderSet;
 import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCGyroBase;
@@ -13,10 +9,10 @@ import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCSpeed;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DirectionType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DriveActionType;
+import org.usfirst.frc.team6500.trc.util.TRCTypes.DriveSyncState;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DriveType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
 
-import edu.wpi.first.wpilibj.RobotState;
 
 public class TRCDrivePID
 {
@@ -76,6 +72,8 @@ public class TRCDrivePID
         autoSpeed = new TRCSpeed();
         MPID = new MiniPID(1.0, 0.0, 0.0);
 
+        TRCDriveSync.requestChangeState(DriveSyncState.DrivePID);
+
         switch(actionType)
         {
             case Forward:
@@ -90,6 +88,8 @@ public class TRCDrivePID
             default:
                 break;
         }
+
+        TRCDriveSync.requestChangeState(DriveSyncState.Teleop);
     }
 
 
@@ -109,8 +109,10 @@ public class TRCDrivePID
             driving = true;
             int deadbandcounter = 0;
 
-            while (deadbandcounter < verificationMin && RobotState.isAutonomous())
+            while (deadbandcounter < verificationMin)
             {
+                TRCDriveSync.assertDrivePID();
+
                 double newSpeed = MPID.getOutput(encoders.getAverageDistanceTraveled(DirectionType.ForwardBackward));
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
                 double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 0.85);
@@ -151,8 +153,10 @@ public class TRCDrivePID
             driving = true;
             int deadbandcounter = 0;
 
-            while (deadbandcounter < verificationMin && RobotState.isAutonomous())
+            while (deadbandcounter < verificationMin)
             {
+                TRCDriveSync.assertDrivePID();
+
                 double newSpeed = MPID.getOutput(encoders.getAverageDistanceTraveled(DirectionType.LeftRight));
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
                 double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);
@@ -186,8 +190,10 @@ public class TRCDrivePID
             driving = true;
             int deadbandcounter = 0;
 
-            while (deadbandcounter < verificationMin && RobotState.isAutonomous())
+            while (deadbandcounter < verificationMin)
             {
+                TRCDriveSync.assertDrivePID();
+
                 double newSpeed = MPID.getOutput(gyro.getAngle());
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
                 double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 1.0);

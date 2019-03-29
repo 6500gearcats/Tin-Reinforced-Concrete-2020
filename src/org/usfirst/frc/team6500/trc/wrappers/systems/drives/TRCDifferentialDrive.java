@@ -1,5 +1,6 @@
 package org.usfirst.frc.team6500.trc.wrappers.systems.drives;
 
+import org.usfirst.frc.team6500.trc.auto.TRCDriveSync;
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DifferentialArcadeMode;
 import org.usfirst.frc.team6500.trc.util.TRCTypes;
@@ -76,6 +77,7 @@ public class TRCDifferentialDrive
 	 */
 	public void arcadeDrive(TRCDriveParams dps)
 	{
+		TRCDriveSync.assertTeleop();
 		if (arcadeMode == DifferentialArcadeMode.XRotation)
 		{
 			this.drive.arcadeDrive(dps.getRealY(), dps.getRealX());
@@ -91,6 +93,7 @@ public class TRCDifferentialDrive
 	 */
 	public void arcadeDrive(double forwardSpeed, double rotationalSpeed, boolean squared)
 	{
+		TRCDriveSync.assertTeleop();
 	    this.drive.arcadeDrive(forwardSpeed, rotationalSpeed, squared);
 	}
 	
@@ -101,6 +104,7 @@ public class TRCDifferentialDrive
 	 */
 	public void setArcadeMode (DifferentialArcadeMode mode)
 	{
+		TRCDriveSync.assertTeleop();
 		this.arcadeMode = mode;
 	}
 	
