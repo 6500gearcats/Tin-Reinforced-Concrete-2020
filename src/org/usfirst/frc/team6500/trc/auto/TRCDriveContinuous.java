@@ -29,6 +29,7 @@ public class TRCDriveContinuous
         speed = driveSpeed;
         driving = new AtomicBoolean(false);
         shouldQuit = new AtomicBoolean(false);
+        actionType = new AtomicInteger(0);
         runner = new Thread(TRCDriveContinuous::driveContinuous);
         runner.setName("Continuous Drive Thread");
 
