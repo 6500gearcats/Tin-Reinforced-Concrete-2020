@@ -115,6 +115,7 @@ public class TRCDrivePID
 
                 double newSpeed = MPID.getOutput(encoders.getAverageDistanceTraveled(DirectionType.ForwardBackward));
                 TRCNetworkData.updateDataPoint("PIDOutput", newSpeed);
+                TRCNetworkData.updateDataPoint("Encoder Output", encoders.getAverageDistanceTraveled(DirectionType.ForwardBackward));
                 double smoothedSpeed = autoSpeed.calculateSpeed(newSpeed, 0.85);
                 TRCNetworkData.updateDataPoint("PIDOutputSmoothed", smoothedSpeed);
 
