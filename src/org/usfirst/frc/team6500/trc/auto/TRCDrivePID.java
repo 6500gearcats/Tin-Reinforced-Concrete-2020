@@ -120,7 +120,7 @@ public class TRCDrivePID
 
                 if (driveType == DriveType.Mecanum)
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(-smoothedSpeed, 0.0, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(smoothedSpeed, 0.0, 0.0);
                 }
                 else if (driveType == DriveType.Differential)
                 {

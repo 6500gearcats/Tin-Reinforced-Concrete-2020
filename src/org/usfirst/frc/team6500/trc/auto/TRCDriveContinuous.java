@@ -6,8 +6,12 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.lang.model.util.ElementScanner6;
+
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.wrappers.systems.drives.TRCMecanumDrive;
+
+import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
 
 
 public class TRCDriveContinuous
@@ -39,8 +43,6 @@ public class TRCDriveContinuous
 
     public static void startDriveContinuous(DriveContinuousActionType driveActionType)
     {
-        if (runner != null) { return; }
-
         actionType.set(driveActionType.ordinal());
         driving.set(true);
         shouldQuit.set(false);
@@ -53,7 +55,7 @@ public class TRCDriveContinuous
     {
         driving.set(true);
 
-        while (shouldQuit.get())
+        while (!shouldQuit.get())
         {
             if (!driving.get()) { continue; }
             TRCDriveSync.assertDriveContinuous();
@@ -74,11 +76,11 @@ public class TRCDriveContinuous
                 }
                 else if (actionType.get() == DriveContinuousActionType.Left.ordinal())
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(0.0, -speed, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(0.0, speed, 0.0);
                 }
                 else if (actionType.get() == DriveContinuousActionType.Right.ordinal())
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(0.0, speed, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(0.0, -speed, 0.0);
                 }
                 else if (actionType.get() == DriveContinuousActionType.RotateLeft.ordinal())
                 {
@@ -90,19 +92,41 @@ public class TRCDriveContinuous
                 }
                 else if (actionType.get() == DriveContinuousActionType.ForwardRight.ordinal())
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(speed, speed, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(speed, -speed, 0.0);
                 }
                 else if (actionType.get() == DriveContinuousActionType.ReverseRight.ordinal())
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(-speed, speed, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(-speed, -speed, 0.0);
                 }
                 else if (actionType.get() == DriveContinuousActionType.ForwardLeft.ordinal())
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(speed, -speed, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(speed, speed, 0.0);
                 }
                 else if (actionType.get() == DriveContinuousActionType.ReverseLeft.ordinal())
                 {
-                    ((TRCMecanumDrive) drive).driveCartesian(-speed, -speed, 0.0);
+                    ((TRCMecanumDrive) drive).driveCartesian(-speed, speed, 0.0);
+                }
+                else if (actionType.get() == DriveContinuousActionType.CurveLeft.ordinal())
+                {
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kFrontLeft, -speed * 0.75);
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kFrontRight, -speed);
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kRearLeft, -speed * 0.75);
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kRearRight, -speed);
+                }
+                else if (actionType.get() == DriveContinuousActionType.CurveRight.ordinal())
+                {
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kFrontLeft, -speed);
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kFrontRight, -speed * 0.75);
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kRearLeft, -speed);
+                    ((TRCMecanumDrive) drive).driveWheel(MotorType.kRearRight, -speed * 0.75);
+                }
+                else if (actionType.get() == DriveContinuousActionType.ReverseLeft.ordinal())
+                {
+                    ((TRCMecanumDrive) drive).driveCartesian(-speed, speed, 0.0);
+                }
+                else
+                {
+                    ((TRCMecanumDrive) drive).driveCartesian(0.0, 0.0, 0.0);
                 }
             }
             else if (driveType == DriveType.Differential)

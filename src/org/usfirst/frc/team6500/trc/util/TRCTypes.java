@@ -104,8 +104,8 @@ public class TRCTypes
 		ForwardLeft,
 		RotateRight,
 		RotateLeft,
-		Reserved10,
-		Reserved11,
+		CurveRight,
+		CurveLeft,
 		Forward,
 	}
 

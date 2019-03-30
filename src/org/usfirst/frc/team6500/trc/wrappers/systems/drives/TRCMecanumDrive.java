@@ -82,7 +82,7 @@ public class TRCMecanumDrive
 	 */
 	public void driveCartesian(TRCDriveParams dps)
 	{
-		TRCDriveSync.assertTeleop();
+		drive.feed();
 		this.driveCartesian(dps.getRealY(), dps.getRealX(), dps.getRealZ());
 	}
 	
@@ -91,7 +91,7 @@ public class TRCMecanumDrive
 	 */
 	public void driveCartesian(double ySpeed, double xSpeed, double zRotation)
 	{
-		TRCDriveSync.assertTeleop();
+		drive.feed();
 		if (this.xyswap)
 		{
 			drive.driveCartesian(xSpeed, -ySpeed, zRotation);
@@ -110,7 +110,6 @@ public class TRCMecanumDrive
 	 */
 	public void driveWheel(MotorType wheel, double power)
 	{
-		TRCDriveSync.assertTeleop();
 		switch(wheel)
 		{
 		case kFrontLeft:
