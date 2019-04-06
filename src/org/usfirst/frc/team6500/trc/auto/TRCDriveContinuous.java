@@ -43,12 +43,21 @@ public class TRCDriveContinuous
 
     public static void startDriveContinuous(DriveContinuousActionType driveActionType)
     {
+        if (runner.isAlive()) { resumeDriveContinuous(); }
+
         actionType.set(driveActionType.ordinal());
         driving.set(true);
         shouldQuit.set(false);
         TRCDriveSync.requestChangeState(DriveSyncState.DriveContinuous);
 
-        runner.start();
+        try
+        {
+            runner.start();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
     }
 
     public static void driveContinuous()
