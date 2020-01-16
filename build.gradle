@@ -1,16 +1,13 @@
 plugins {
-    id "java-library"
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.4.1"
+    id "edu.wpi.first.GradleRIO" version "2020.1.2"
 }
 
-version = "2019.1.2"
+version = "2020.0.0"
 
 dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
-    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
 }
 

@@ -22,7 +22,7 @@ public class TRCDriveInput
 	// private static HashMap<Integer, Joystick> inputSticks; removed this because you can just <joystick>.getPort()
 
     private static HashMap<Integer, HashMap<Object, Runnable>> pressFuncs; 
-	private static HashMap<Integer, HashMap<Object[], Runnable>> absenceFuncs; // oh god why does this work  // spelled "absence", not "absense" :P
+	private static HashMap<Integer, HashMap<Object[], Runnable>> absenceFuncs; // oh god why does this work
 	/* Array in a HashMap in a HashMap... */
 	private static double baseSpeed = 0.0;
     private static double boostSpeed = 0.0;

@@ -6,8 +6,6 @@ import org.usfirst.frc.team6500.trc.util.TRCTypes.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.lang.model.util.ElementScanner6;
-
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.wrappers.systems.drives.TRCMecanumDrive;
 
@@ -43,6 +41,8 @@ public class TRCDriveContinuous
 
     public static void startDriveContinuous(DriveContinuousActionType driveActionType)
     {
+        if (runner.isAlive()) { resumeDriveContinuous(); return; }
+
         actionType.set(driveActionType.ordinal());
         driving.set(true);
         shouldQuit.set(false);

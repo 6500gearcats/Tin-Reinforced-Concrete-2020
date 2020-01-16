@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 
 import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCEncoder;
+import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCSparkMaxEncoder;
 import org.usfirst.frc.team6500.trc.wrappers.sensors.TRCTalonEncoder;
 
 
@@ -57,6 +60,7 @@ public class TRCTypes
 		Victor,
 		VictorSP,
 		CANTalonSRX,
+		CANSparkMax,
 	}
 
 	// Types of Encoders
@@ -64,6 +68,7 @@ public class TRCTypes
 	{
 		Digital,
 		Talon,
+		SparkMax,
 	}
 	
 	// Types of actions a TRCDirectionalSystem can execute
@@ -198,7 +203,7 @@ public class TRCTypes
 	}
 
 
-	public static Object encoderTypeToObject(int[] ports, double dpp, boolean lowres, boolean inverted, EncoderType type)
+	public static Object encoderTypeToObject(int[] ports, double dpp, boolean lowres, boolean inverted, EncoderType type, SpeedController motor)
 	{
 		Object encoder = null;
 
@@ -209,6 +214,9 @@ public class TRCTypes
 				break;
 			case Talon:
 				encoder = new TRCTalonEncoder(ports[0], dpp, inverted);
+				break;
+			case SparkMax:
+				encoder = new TRCSparkMaxEncoder(motor, dpp, inverted);
 				break;
 			default:
 				break;
@@ -256,6 +264,9 @@ public class TRCTypes
 				((WPI_TalonSRX) motor).set(ControlMode.PercentOutput, 0.0);
 				((WPI_TalonSRX) motor).setInverted(false);
 				((WPI_TalonSRX) motor).setSensorPhase(false);
+				break;
+			case CANSparkMax:
+				motor = new CANSparkMax(port, CANSparkMaxLowLevel.MotorType.kBrushless);
 				break;
 			default:
 				motor = new Spark(port);

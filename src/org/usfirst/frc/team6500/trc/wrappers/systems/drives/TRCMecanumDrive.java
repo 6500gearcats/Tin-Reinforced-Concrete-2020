@@ -1,6 +1,5 @@
 package org.usfirst.frc.team6500.trc.wrappers.systems.drives;
 
-import org.usfirst.frc.team6500.trc.auto.TRCDriveSync;
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.SpeedControllerType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes;
@@ -18,14 +17,15 @@ public class TRCMecanumDrive
 {
 	// Keeps track of whether we want the x and y to be swapped; this exists because the joystick and drive classes have
 	// differing default parameter placement for x and y and it can get very confusing 
-	private boolean xyswap;
+	protected boolean xyswap;
 	// Can't access these from the superclass so we have to keep track of them ourselves
-	private final SpeedController frontLeftMotor;
-	private final SpeedController rearLeftMotor;
-	private final SpeedController frontRightMotor;
-    private final SpeedController rearRightMotor;
+	protected final SpeedController frontLeftMotor;
+	protected final SpeedController rearLeftMotor;
+	protected final SpeedController frontRightMotor;
+	protected final SpeedController rearRightMotor;
+	protected final SpeedController outputMotors[] = new SpeedController[4];
     
-    private MecanumDrive drive;
+    protected MecanumDrive drive;
 
 	/**
 	 * Simpler constructor, takes info about the motors and turns it into objects and sets the xyswap to false
@@ -41,10 +41,10 @@ public class TRCMecanumDrive
 		{
 			controllers[i].setInverted(inversion[i]);
 		}
-        this.frontLeftMotor = controllers[0];
-        this.rearLeftMotor = controllers[1];
-        this.frontRightMotor = controllers[2];
-        this.rearRightMotor = controllers[3];
+        this.frontLeftMotor  = controllers[0]; this.outputMotors[0] = this.frontLeftMotor;
+        this.rearLeftMotor   = controllers[1]; this.outputMotors[1] = this.rearLeftMotor;
+        this.frontRightMotor = controllers[2]; this.outputMotors[2] = this.frontRightMotor;
+        this.rearRightMotor  = controllers[3]; this.outputMotors[3] = this.rearRightMotor;
 
 		drive = new MecanumDrive(this.frontLeftMotor, this.rearLeftMotor, this.frontRightMotor, this.rearRightMotor);
 		this.xyswap = false;
@@ -65,10 +65,10 @@ public class TRCMecanumDrive
 		{
 			controllers[i].setInverted(inversion[i]);
 		}
-        this.frontLeftMotor = controllers[0];
-        this.rearLeftMotor = controllers[1];
-        this.frontRightMotor = controllers[2];
-        this.rearRightMotor = controllers[3];
+        this.frontLeftMotor  = controllers[0]; this.outputMotors[0] = this.frontLeftMotor;
+        this.rearLeftMotor   = controllers[1]; this.outputMotors[1] = this.rearLeftMotor;
+        this.frontRightMotor = controllers[2]; this.outputMotors[2] = this.frontRightMotor;
+        this.rearRightMotor  = controllers[3]; this.outputMotors[3] = this.rearRightMotor;
 
 		drive = new MecanumDrive(this.frontLeftMotor, this.rearLeftMotor, this.frontRightMotor, this.rearRightMotor);
 		this.xyswap = swapxy;
@@ -148,5 +148,10 @@ public class TRCMecanumDrive
 	public boolean getXYSwapped()
 	{
 		return this.xyswap;
+	}
+
+	public SpeedController[] getOutputMotors()
+	{
+		return this.outputMotors;
 	}
 }

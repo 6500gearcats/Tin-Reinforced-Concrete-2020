@@ -1,6 +1,5 @@
 package org.usfirst.frc.team6500.trc.wrappers.systems.drives;
 
-import org.usfirst.frc.team6500.trc.auto.TRCDriveSync;
 import org.usfirst.frc.team6500.trc.util.TRCDriveParams;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DifferentialArcadeMode;
 import org.usfirst.frc.team6500.trc.util.TRCTypes;
@@ -18,12 +17,13 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 public class TRCDifferentialDrive
 {
 	// When passing in a TRCDriveParams, we need to know which axis (X or Z to use for rotation)
-    private DifferentialArcadeMode arcadeMode;
+    protected DifferentialArcadeMode arcadeMode;
 
-    private final SpeedController leftMotor;
-	private final SpeedController rightMotor;
-    
-    private DifferentialDrive drive;
+    protected final SpeedController leftMotor;
+	protected final SpeedController rightMotor;
+	public final SpeedController outputMotors[] = new SpeedController[2];
+	
+    protected DifferentialDrive drive;
 	
 
 	/**
@@ -40,12 +40,11 @@ public class TRCDifferentialDrive
 		{
 			controllers[i].setInverted(inversion[i]);
 		}
-        this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
-        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
+        this.leftMotor  = new SpeedControllerGroup(controllers[0], controllers[1]); this.outputMotors[0] = this.leftMotor;
+        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]); this.outputMotors[1] = this.rightMotor;
 
 		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
 		this.arcadeMode = DifferentialArcadeMode.ZRotation;
-
 	}
 	
 	/**
@@ -63,8 +62,8 @@ public class TRCDifferentialDrive
 		{
 			controllers[i].setInverted(inversion[i]);
 		}
-        this.leftMotor = new SpeedControllerGroup(controllers[0], controllers[1]);
-        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]);
+        this.leftMotor  = new SpeedControllerGroup(controllers[0], controllers[1]); this.outputMotors[0] = this.leftMotor;
+        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]); this.outputMotors[1] = this.rightMotor;
 
 		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
 		this.arcadeMode = arcadeType;
@@ -94,6 +93,16 @@ public class TRCDifferentialDrive
 	{
 	    this.drive.arcadeDrive(forwardSpeed, rotationalSpeed, squared);
 	}
+
+	public void tankDrive(double leftSpeed, double rightSpeed, boolean squared)
+	{
+		this.drive.tankDrive(leftSpeed, rightSpeed, squared);
+	}
+
+	public void tankDrive(TRCDriveParams dps)
+	{
+		this.tankDrive(dps.getRealX(), dps.getRealY(), true);
+	}
 	
 	/**
 	 * Set which axis should be used for rotation when using the arcadeDrive method, as different drivers prefer different ways
@@ -113,5 +122,10 @@ public class TRCDifferentialDrive
 	public DifferentialArcadeMode getArcadeMode()
 	{
 		return this.arcadeMode;
+	}
+
+	public SpeedController[] getOutputMotors()
+	{
+		return this.outputMotors;
 	}
 }

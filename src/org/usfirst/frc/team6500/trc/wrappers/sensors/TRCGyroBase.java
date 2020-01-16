@@ -134,4 +134,11 @@ public class TRCGyroBase extends GyroBase
 		}
 	}
 
+	@Override
+	public void close()	{
+		if (this.internalGyroType == GyroType.ADXRS450)
+		{
+			((ADXRS450_Gyro) installedGyro).close();
+		}
+	}
 }

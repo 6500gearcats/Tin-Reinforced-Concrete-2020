@@ -3,6 +3,9 @@ package org.usfirst.frc.team6500.trc.wrappers.sensors;
 import org.usfirst.frc.team6500.trc.util.TRCNetworkData;
 import org.usfirst.frc.team6500.trc.util.TRCTypes;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.VerbosityType;
+
+import edu.wpi.first.wpilibj.SpeedController;
+
 import org.usfirst.frc.team6500.trc.util.TRCTypes.DirectionType;
 import org.usfirst.frc.team6500.trc.util.TRCTypes.EncoderType;;
 
@@ -10,6 +13,7 @@ public class TRCEncoderSet
 {
 	private int[] ports;
 	private EncoderType[] types;
+	private SpeedController[] motors;
 	private Object[] internalEncoders;
 	private double[] distancesPerPulse;
 	private boolean lowresolution;
@@ -24,11 +28,12 @@ public class TRCEncoderSet
 	 * @param lowres Only use the first channel for reading encoder values. Less accurate, but uses fewer ports. If this is enabled, dioports's consecutive values should be duplicates.
 	 * @param totalwheels How many encoders are plugged in. This must be half the length of dioports.
 	 */
-	public TRCEncoderSet(int[] dioports, double[] dpp, boolean lowres, int totalwheels, EncoderType[] types)
+	public TRCEncoderSet(int[] dioports, double[] dpp, boolean lowres, int totalwheels, EncoderType[] types, SpeedController[] motors)
 	{
 		this.internalEncoders = new Object[totalwheels];
 		this.ports = dioports.clone();
 		this.types = types.clone();
+		this.motors = motors.clone();
 		this.distancesPerPulse = dpp.clone();
 		this.lowresolution = lowres;
 		this.numwheels = totalwheels;
@@ -39,11 +44,11 @@ public class TRCEncoderSet
 			
 			if (wheel >= this.numwheels / 2) // Right wheels
 			{
-				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, true, this.types[wheel]);
+				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, true, this.types[wheel], this.motors[wheel]);
 			}
 			else                             // Left wheels
 			{
-				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, false, this.types[wheel]);
+				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, false, this.types[wheel], this.motors[wheel]);
 			}
 		}
 
