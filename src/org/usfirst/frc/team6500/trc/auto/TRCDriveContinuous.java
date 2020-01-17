@@ -48,7 +48,14 @@ public class TRCDriveContinuous
         shouldQuit.set(false);
         TRCDriveSync.requestChangeState(DriveSyncState.DriveContinuous);
 
-        runner.start();
+        try
+        {
+            runner.start();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
     }
 
     public static void driveContinuous()
