@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 
@@ -57,7 +58,7 @@ public class TRCTypes
 		SD540,
 		Spark,
 		Talon,
-		Victor,
+		CANVictorSPX,
 		VictorSP,
 		CANTalonSRX,
 		CANSparkMax,
@@ -252,8 +253,12 @@ public class TRCTypes
 			case Talon:
 				motor = new PWMTalonSRX(port);
 				break;
-			case Victor:
-				motor = new PWMVictorSPX(port);
+			case CANVictorSPX:
+				motor = new WPI_VictorSPX(port);
+				((WPI_VictorSPX) motor).configFactoryDefault();
+				((WPI_VictorSPX) motor).set(ControlMode.PercentOutput, 0.0);
+				((WPI_VictorSPX) motor).setInverted(false);
+				((WPI_VictorSPX) motor).setSensorPhase(false);
 				break;
 			case VictorSP:
 				motor = new VictorSP(port);
