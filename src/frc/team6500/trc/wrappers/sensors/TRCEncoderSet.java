@@ -4,6 +4,8 @@ import frc.team6500.trc.util.TRCNetworkData;
 import frc.team6500.trc.util.TRCTypes;
 import frc.team6500.trc.util.TRCTypes.VerbosityType;
 
+import com.ctre.phoenix.sensors.CANCoder;
+
 import edu.wpi.first.wpilibj.SpeedController;
 
 import frc.team6500.trc.util.TRCTypes.DirectionType;
@@ -67,9 +69,13 @@ public class TRCEncoderSet
 			{
 				((TRCEncoder) this.internalEncoders[i]).reset();
 			}
-			else
+			else if (this.types[i] == EncoderType.Talon)
 			{
 				((TRCTalonEncoder) this.internalEncoders[i]).reset();
+			}
+			else if (this.types[i] == EncoderType.SparkMax)
+			{
+				((CANCoder) this.internalEncoders[i]).setPosition(0.0);
 			}
 		}
 
@@ -84,13 +90,17 @@ public class TRCEncoderSet
 	public void resetIndividualEncoder(int encodernum)
 	{
 		if (this.types[encodernum] == EncoderType.Digital)
-			{
-				((TRCEncoder) this.internalEncoders[encodernum]).reset();
-			}
-			else
-			{
-				((TRCTalonEncoder) this.internalEncoders[encodernum]).reset();
-			}
+		{
+			((TRCEncoder) this.internalEncoders[encodernum]).reset();
+		}
+		else if (this.types[encodernum] == EncoderType.Talon)
+		{
+			((TRCTalonEncoder) this.internalEncoders[encodernum]).reset();
+		}
+		else if (this.types[encodernum] == EncoderType.SparkMax)
+		{
+			((CANCoder) this.internalEncoders[encodernum]).setPosition(0.0);
+		}
 	}
 
 	private static double getDirectionalDistance (DirectionType direction, double originalDistance, int wheelNum)
@@ -131,9 +141,13 @@ public class TRCEncoderSet
 			{
 				distancesum += getDirectionalDistance(direction, ((TRCEncoder) this.internalEncoders[i]).getDistance(), i);
 			}
-			else
+			else if (this.types[i] == EncoderType.Talon)
 			{
 				distancesum += getDirectionalDistance(direction, ((TRCTalonEncoder) this.internalEncoders[i]).getDistance(), i);
+			}
+			else if (this.types[i] == EncoderType.SparkMax)
+			{
+				distancesum += getDirectionalDistance(direction, ((CANCoder) this.internalEncoders[i]).getPosition(), i);
 			}
 		}
 		
@@ -156,9 +170,13 @@ public class TRCEncoderSet
 			{
 				distancesum += Math.abs(((TRCEncoder) this.internalEncoders[i]).getDistance());
 			}
-			else
+			else if (this.types[i] == EncoderType.Talon)
 			{
 				distancesum += Math.abs(((TRCTalonEncoder) this.internalEncoders[i]).getDistance());
+			}
+			else if (this.types[i] == EncoderType.SparkMax)
+			{
+				distancesum += Math.abs(((CANCoder) this.internalEncoders[i]).getPosition());
 			}
 		}
 		
@@ -178,10 +196,15 @@ public class TRCEncoderSet
 		{
 			return ((TRCEncoder) this.internalEncoders[encodernum]).getDistance();
 		}
-		else
+		else if (this.types[encodernum] == EncoderType.Talon)
 		{
 			return ((TRCTalonEncoder) this.internalEncoders[encodernum]).getDistance();
 		}
+		else if (this.types[encodernum] == EncoderType.SparkMax)
+		{
+			return ((CANCoder) this.internalEncoders[encodernum]).getPosition();
+		}
+		return 0.0;
 	}
 	
 	/**
