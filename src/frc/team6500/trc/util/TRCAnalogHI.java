@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class TRCAnalogHI
 {
 	private XboxController.Axis xbx;
-	private Joystick.AxisType joy;
+	private Joystick.Axis joy;
 
 	/**
 	 *	Create a reference to a Xbox axis but not a Joystick axis
@@ -23,9 +23,9 @@ public class TRCAnalogHI
 
 	/**
 	 *	Create a reference to a Joystick axis but not a Xbox axis
-	 *	@param joystickAxis the {@link Joystick.AxisType} to reference
+	 *	@param joystickAxis the {@link Joystick.Axis} to reference
 	 */
-	public TRCAnalogHI(Joystick.AxisType joystickAxis)
+	public TRCAnalogHI(Joystick.Axis joystickAxis)
 	{
 		this.joy = joystickAxis;
 	}
@@ -33,9 +33,9 @@ public class TRCAnalogHI
 	/**
 	 *	Create a reference to both an Xbox axis and Joystick axis
 	 *	@param xboxAxis the {@link XboxController.Axis} to reference
-	 *	@param joystickAxis the {@link Joystick.AxisType} to reference
+	 *	@param joystickAxis the {@link Joystick.Axis} to reference
 	 */
-	public TRCAnalogHI(XboxController.Axis xboxAxis, Joystick.AxisType joystickAxis)
+	public TRCAnalogHI(XboxController.Axis xboxAxis, Joystick.Axis joystickAxis)
 	{
 		this.xbx = xboxAxis;
 		this.joy = joystickAxis;
@@ -47,7 +47,7 @@ public class TRCAnalogHI
 	public XboxController.Axis getXboxAxis() { return this.xbx; }
 
 	/**
-	 *	@return the {@link Joystick.AxisType} reference
+	 *	@return the {@link Joystick.Axis} reference
 	 */
 	public Joystick.AxisType getJoystickAxis() { return this.joy; }
 
@@ -57,7 +57,7 @@ public class TRCAnalogHI
 	public boolean hasXboxAxis() { return this.xbx != null; }
 
 	/**
-	 *	@return if the analog interface contains a reference to a {@link Joystick.AxisType}
+	 *	@return if the analog interface contains a reference to a {@link Joystick.Axis}
 	 */
 	public boolean hasJoystickAxis() { return this.joy != null; }
 }
