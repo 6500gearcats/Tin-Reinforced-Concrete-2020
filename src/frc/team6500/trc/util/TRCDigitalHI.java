@@ -55,7 +55,7 @@ public class TRCDigitalHI
 	/**
 	 *	@return if the digital interface contains a reference to a {@link XboxController.Button}
 	 */
-	public boolean hasXboxButton() { return this.xbx.value != null; }
+	public boolean hasXboxButton() { return this.xbx != null; }
 
 	/**
 	 *	@return if the digital interface contains a reference to a raw button
