@@ -2,6 +2,7 @@ package frc.team6500.trc.util;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.HIDType;
 
 /**
  *	Create an abstract analog Human Interface that bridges different analog devices. 
@@ -39,6 +40,22 @@ public class TRCAnalogHI
 	{
 		this.xbx = xboxAxis;
 		this.joy = joystickAxis;
+	}
+
+	/**
+	 *	Get a raw axis id for a specified interface type
+	 *	@param type the type (Xbox or Joystick) of the axis id to return
+	 *	@return the axis id of the specified type (Note: returns -1 for unrecognized types)
+	 */
+	// this method IS PROTECTED, so the only way to access it is through a TRCController!!!
+	protected int getAxis(HIDType type)
+	{
+		switch (type)
+		{
+			case HIDType.kGamepad: return this.xbx.value;
+			case HIDType.kJoystick: return this.joy.value;
+		}
+		return -1;
 	}
 
 	/**

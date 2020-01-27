@@ -2,6 +2,7 @@ package frc.team6500.trc.util;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.HIDType;
 
 /**
  *	Create an abstract digital Human Interface that bridges different digital devices. 
@@ -40,6 +41,22 @@ public class TRCDigitalHI
 	{
 		this.xbx = xboxButton;
 		this.raw = rawButton;
+	}
+
+	/**
+	 *	Get a raw button id for a specified interface type
+	 *	@param type the type (Xbox or Joystick) of the button id to return
+	 *	@return the button id of the specified type (Note: returns -1 for unrecognized types)
+	 */
+	// this method IS PROTECTED, so the only way to access it is through a TRCController!!!
+	protected int getButton(HIDType type)
+	{
+		switch (type)
+		{
+			case HIDType.kGamepad: return this.xbx.value;
+			case HIDType.kJoystick: return this.raw;
+		}
+		return -1;
 	}
 
 	/**
