@@ -64,6 +64,6 @@ public class TRCController extends GenericHID
 				case kRight: return getRawAxis(XboxController.Axis.kRightY.value);
 			}
 		}
-		return this.getX();
+		return this.getY();
 	}
 }
