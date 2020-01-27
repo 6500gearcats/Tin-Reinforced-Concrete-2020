@@ -53,8 +53,8 @@ public class TRCDigitalHI
 	{
 		switch (type)
 		{
-			case HIDType.kGamepad: return this.xbx.value;
-			case HIDType.kJoystick: return this.raw;
+			case kHIDGamepad: return this.xbx.value;
+			case kHIDJoystick: return this.raw;
 		}
 		return -1;
 	}

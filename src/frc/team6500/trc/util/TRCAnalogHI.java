@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID.HIDType;
 public class TRCAnalogHI
 {
 	private XboxController.Axis xbx;
-	private Joystick.Axis joy;
+	private Joystick.AxisType joy;
 
 	/**
 	 *	Create a reference to a Xbox axis but not a Joystick axis
@@ -24,9 +24,9 @@ public class TRCAnalogHI
 
 	/**
 	 *	Create a reference to a Joystick axis but not a Xbox axis
-	 *	@param joystickAxis the {@link Joystick.Axis} to reference
+	 *	@param joystickAxis the {@link Joystick.AxisType} to reference
 	 */
-	public TRCAnalogHI(Joystick.Axis joystickAxis)
+	public TRCAnalogHI(Joystick.AxisType joystickAxis)
 	{
 		this.joy = joystickAxis;
 	}
@@ -34,9 +34,9 @@ public class TRCAnalogHI
 	/**
 	 *	Create a reference to both an Xbox axis and Joystick axis
 	 *	@param xboxAxis the {@link XboxController.Axis} to reference
-	 *	@param joystickAxis the {@link Joystick.Axis} to reference
+	 *	@param joystickAxis the {@link Joystick.AxisType} to reference
 	 */
-	public TRCAnalogHI(XboxController.Axis xboxAxis, Joystick.Axis joystickAxis)
+	public TRCAnalogHI(XboxController.Axis xboxAxis, Joystick.AxisType joystickAxis)
 	{
 		this.xbx = xboxAxis;
 		this.joy = joystickAxis;
@@ -52,8 +52,8 @@ public class TRCAnalogHI
 	{
 		switch (type)
 		{
-			case HIDType.kGamepad: return this.xbx.value;
-			case HIDType.kJoystick: return this.joy.value;
+			case kHIDGamepad: return this.xbx.value;
+			case kHIDJoystick: return this.joy.value;
 		}
 		return -1;
 	}
@@ -64,7 +64,7 @@ public class TRCAnalogHI
 	public XboxController.Axis getXboxAxis() { return this.xbx; }
 
 	/**
-	 *	@return the {@link Joystick.Axis} reference
+	 *	@return the {@link Joystick.AxisType} reference
 	 */
 	public Joystick.AxisType getJoystickAxis() { return this.joy; }
 
@@ -74,7 +74,7 @@ public class TRCAnalogHI
 	public boolean hasXboxAxis() { return this.xbx != null; }
 
 	/**
-	 *	@return if the analog interface contains a reference to a {@link Joystick.Axis}
+	 *	@return if the analog interface contains a reference to a {@link Joystick.AxisType}
 	 */
 	public boolean hasJoystickAxis() { return this.joy != null; }
 }
