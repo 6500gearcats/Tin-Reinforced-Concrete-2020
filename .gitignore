@@ -6,3 +6,4 @@ repos/
 .settings/
 .project
 .vscode/
+.DS_Store
