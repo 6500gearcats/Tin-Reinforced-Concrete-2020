@@ -137,46 +137,58 @@ public class TRCTypes
 		Log_Error,
 	}
 
-	// Types of controllers
-	public enum ControllerType
-	{
-		Xbox360,    // Microsoft XBox 360 wired controller
-		Extreme3D,  // Logitech Extreme 3D Joystick, included in KoP
-		Generic,    // Any other basic HID compliant joystick
-	}
+	// ==============================
+	// use GenericHID.HIDType instead
+	// ==============================
+	// // Types of controllers
+	// public enum ControllerType
+	// {
+	// 	Xbox360,    // Microsoft XBox 360 wired controller
+	// 	Extreme3D,  // Logitech Extreme 3D Joystick, included in KoP
+	// 	Generic,    // Any other basic HID compliant joystick
+	// }
 
-	// Types of buttons on an Xbox controller (these are precisely accurate to the HID output from the controller, don't edit them)
-	public enum XboxButtonType
-	{
-		A,
-		B,
-		X,
-		Y,
-		LeftBumper,
-		RightBumper,
-		Back,
-		Start,
-		LeftStick,
-		RightStick,
-	}
+	// =================================
+	// use XboxController.Button instead
+	// =================================
+	// // Types of buttons on an Xbox controller (these are precisely accurate to the HID output from the controller, don't edit them)
+	// public enum XboxButtonType
+	// {
+	// 	A,
+	// 	B,
+	// 	X,
+	// 	Y,
+	// 	LeftBumper,
+	// 	RightBumper,
+	// 	Back,
+	// 	Start,
+	// 	LeftStick,
+	// 	RightStick,
+	// }
 
-	// Types of axis of an Xbox controller (these are precisely accurate to the HID output from the controller, don't edit them)
-	public enum XboxAxisType
-	{
-		LeftX,
-		LeftY,
-		LeftTrigger,
-		RightTrigger,
-		RightX,
-		RightY,
-	}
+	// ===============================
+	// use XboxController.Axis instead
+	// ===============================
+	// // Types of axis of an Xbox controller (these are precisely accurate to the HID output from the controller, don't edit them)
+	// public enum XboxAxisType
+	// {
+	// 	LeftX,
+	// 	LeftY,
+	// 	LeftTrigger,
+	// 	RightTrigger,
+	// 	RightX,
+	// 	RightY,
+	// }
 
-	// Types of buttons on a controller
-	public enum ControllerButtonType
-	{
-		Xbox,
-		Generic,
-	}
+	// =====================
+	// completely deprecated
+	// =====================
+	// // Types of buttons on a controller
+	// public enum ControllerButtonType
+	// {
+	// 	Xbox,
+	// 	Generic,
+	// }
 
 	// Types of directions the robot can move, for use with the encoders
 	public enum DirectionType
