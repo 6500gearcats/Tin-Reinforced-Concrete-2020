@@ -3,6 +3,8 @@ package frc.team6500.trc.util;
 import frc.team6500.trc.hi.TRCDigitalHI;
 import frc.team6500.trc.hi.TRCController;
 import frc.team6500.trc.hi.TRCInterfaceObserver;
+import edu.wpi.first.wpilibj.GenericHID.HIDType;
+import edu.wpi.first.wpilibj.XboxController;
 import java.util.HashMap;
 import java.io.File;
 import javax.xml.parsers.*;
@@ -71,7 +73,32 @@ public class TRCSettingsParser
 	 */
 	public TRCInterfaceObserver parse(TRCController controller)
 	{
-		return null;
+		HashMap<TRCDigitalHI, Runnable> settings = new HashMap<TRCDigitalHI, Runnable>();
+
+		NodeList options = doc.getDocumentElement().getElementsByTagName("bind");
+		for (int i = 0; i < options.getLength(); i++)
+		{
+			Element bind = (Element)options.item(i);
+			
+			XboxController.Button xbxButton = null;
+			int rawButton = -1;
+
+			NodeList bindData = bind.getChildNodes();
+			for (int k = 0; k < bindData.getLength(); k++)
+			{
+				Node buttonData = bindData.item(k);
+				buttonData.normalize();
+				
+				String typeName = buttonData.getNodeName();
+				if (typeName.equals("xbx"))
+					xbxButton = XboxController.Button.values()[Integer.parseInt(buttonData.getTextContent())];
+				else if (typeName.equals("joy"))
+					rawButton = Integer.parseInt(buttonData.getTextContent());
+			}
+			settings.put(new TRCDigitalHI(xbxButton, rawButton), this.binds.get(bind.getAttribute("name")));
+		}
+
+		return new TRCInterfaceObserver(controller, settings);
 	}
 
 	public void setBinds(HashMap<String, Runnable> bindings) { this.binds = bindings; }
