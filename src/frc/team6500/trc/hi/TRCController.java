@@ -1,4 +1,4 @@
-package frc.team6500.trc.util;
+package frc.team6500.trc.hi;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID;
