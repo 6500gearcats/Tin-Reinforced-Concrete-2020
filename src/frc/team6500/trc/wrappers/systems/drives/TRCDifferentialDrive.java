@@ -21,7 +21,7 @@ public class TRCDifferentialDrive
 
     protected final SpeedController leftMotor;
 	protected final SpeedController rightMotor;
-	public final SpeedController outputMotors[] = new SpeedController[2];
+	public final SpeedController outputMotors[];
 	
     protected DifferentialDrive drive;
 	
@@ -35,13 +35,13 @@ public class TRCDifferentialDrive
 	 */
 	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion)
 	{
-		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
+		outputMotors = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
 		for (int i = 0; i < inversion.length; i++)
 		{
-			controllers[i].setInverted(inversion[i]);
+			outputMotors[i].setInverted(inversion[i]);
 		}
-        this.leftMotor  = new SpeedControllerGroup(controllers[0], controllers[1]); this.outputMotors[0] = this.leftMotor;
-        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]); this.outputMotors[1] = this.rightMotor;
+        this.leftMotor  = new SpeedControllerGroup(outputMotors[0], outputMotors[1]);
+        this.rightMotor = new SpeedControllerGroup(outputMotors[2], outputMotors[3]);
 
 		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
 		this.arcadeMode = DifferentialArcadeMode.ZRotation;
@@ -57,13 +57,13 @@ public class TRCDifferentialDrive
 	 */
 	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion, DifferentialArcadeMode arcadeType)
 	{
-		SpeedController[] controllers = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
+		outputMotors = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
 		for (int i = 0; i < inversion.length; i++)
 		{
-			controllers[i].setInverted(inversion[i]);
+			outputMotors[i].setInverted(inversion[i]);
 		}
-        this.leftMotor  = new SpeedControllerGroup(controllers[0], controllers[1]); this.outputMotors[0] = this.leftMotor;
-        this.rightMotor = new SpeedControllerGroup(controllers[2], controllers[3]); this.outputMotors[1] = this.rightMotor;
+        this.leftMotor  = new SpeedControllerGroup(outputMotors[0], outputMotors[1]);
+        this.rightMotor = new SpeedControllerGroup(outputMotors[2], outputMotors[3]);
 
 		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
 		this.arcadeMode = arcadeType;
