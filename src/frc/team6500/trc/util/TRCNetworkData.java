@@ -31,6 +31,7 @@ public class TRCNetworkData
     private static HashMap<String, NetworkTableEntry> dataPoints;
 
     private static int vOptionsID;
+    private static boolean initialized = false;
 
     /**
      * Setup the sending of data to the driver station specifing with DIType how it should be done.
@@ -67,12 +68,15 @@ public class TRCNetworkData
         verbosityOptions[2] = "Error (Critical Messages)";
         putOptions(verbosityOptions, 0);
         vOptionsID = 0;
+
+        initialized = true;
     }
 
 
 
     public static NetworkTable getVisionTable()
     {
+        if (!initialized) {return null;}
         return table.getSubTable("vision");
     }
 
@@ -105,6 +109,7 @@ public class TRCNetworkData
      */
     public static void logString(VerbosityType v, String logData)
     {
+        if (!initialized) {return;}
         if (getVerbosity().ordinal() > v.ordinal()) { return; }
 
         String oldLog = logEntry.getString("");
@@ -140,6 +145,7 @@ public class TRCNetworkData
      */
     public static void putOptions(String[] choices, int id)
     {
+        if (!initialized) {return;}
         SendableChooser<Integer> chooser = new SendableChooser<Integer>();
         
         for (int i = 0; i < choices.length; i++)
@@ -159,6 +165,7 @@ public class TRCNetworkData
      */
     public static int getSelection(int chooserNum)
     {
+        if (!initialized) {return -1;}
         return options.get(chooserNum).getSelected();
     }
 
@@ -169,6 +176,7 @@ public class TRCNetworkData
      */
     public static void createDataPoint(String name)
     {
+        if (!initialized) {return;}
         NetworkTableEntry entry = table.getEntry(name);
         dataPoints.put(name, entry);
     }
@@ -181,6 +189,7 @@ public class TRCNetworkData
      */
     public static void updateDataPoint(String name, Object value)
     {
+        if (!initialized) {return;}
         dataPoints.get(name).setValue(value);
     }
 }

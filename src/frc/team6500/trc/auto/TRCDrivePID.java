@@ -55,6 +55,7 @@ public class TRCDrivePID
         TRCNetworkData.createDataPoint("PIDSetpoint");
         TRCNetworkData.createDataPoint("PIDOutput");
         TRCNetworkData.createDataPoint("PIDOutputSmoothed");
+        TRCNetworkData.createDataPoint("Encoder Output");
     }
 
     /**
