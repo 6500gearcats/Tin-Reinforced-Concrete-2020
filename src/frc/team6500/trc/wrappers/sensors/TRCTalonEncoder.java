@@ -1,8 +1,9 @@
 package frc.team6500.trc.wrappers.sensors;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.PIDSource;
 
-public class TRCTalonEncoder
+public class TRCTalonEncoder extends PIDSource
 {
     private WPI_TalonSRX talon;
     private double distancePerPulse;
@@ -31,5 +32,10 @@ public class TRCTalonEncoder
     public void reset()
     {
         this.talon.setSelectedSensorPosition(0);
+    }
+
+    public double pidGet()
+    {
+    	return this.getDistance();
     }
 }

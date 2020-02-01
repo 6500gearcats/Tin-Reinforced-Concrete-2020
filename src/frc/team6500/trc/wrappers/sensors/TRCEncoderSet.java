@@ -5,11 +5,12 @@ import frc.team6500.trc.util.TRCTypes;
 import frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.PIDSource;
 
 import frc.team6500.trc.util.TRCTypes.DirectionType;
-import frc.team6500.trc.util.TRCTypes.EncoderType;;
+import frc.team6500.trc.util.TRCTypes.EncoderType;
 
-public class TRCEncoderSet
+public class TRCEncoderSet implements PIDSource
 {
 	private int[] ports;
 	private EncoderType[] types;
@@ -18,7 +19,6 @@ public class TRCEncoderSet
 	private double[] distancesPerPulse;
 	private boolean lowresolution;
 	private int numwheels;
-	
 	
 	/**
 	 * Consolidation of encoders on a robot's wheels for ease of use
@@ -221,4 +221,9 @@ public class TRCEncoderSet
 
 	// 	TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been calibrated");
 	// }
+
+	public double pidGet()
+	{
+		return this.getAverageDistanceTraveled(DirectionType.ForwardBackward);
+	}
 }

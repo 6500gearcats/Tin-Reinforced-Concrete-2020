@@ -2,15 +2,14 @@ package frc.team6500.trc.wrappers.sensors;
 
 import frc.team6500.trc.util.TRCNetworkData;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.PIDSource;
 
-public class TRCEncoder
+public class TRCEncoder implements PIDSource
 {
 	private Encoder internalEncoder;
 	private double distancePerPulse;
 	private boolean reverse;
 	private boolean lowresolution;
-
 	
 	/**
 	 * An encoder attached to a motor, used to determine its output's position compared to where it was when the encoder was last reset
@@ -165,5 +164,10 @@ public class TRCEncoder
 	public boolean getReverse()
 	{
 		return this.reverse;
+	}
+
+	public double pidGet()
+	{
+		return this.getDistance();
 	}
 }

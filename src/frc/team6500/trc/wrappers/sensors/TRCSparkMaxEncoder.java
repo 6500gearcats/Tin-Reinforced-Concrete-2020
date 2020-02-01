@@ -3,10 +3,11 @@ package frc.team6500.trc.wrappers.sensors;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.PIDSource;
 
 import com.revrobotics.CANEncoder;
 
-public class TRCSparkMaxEncoder
+public class TRCSparkMaxEncoder implements PIDSource
 {
     private CANSparkMax sparkMax;
     private CANEncoder smEncoder;
@@ -37,5 +38,10 @@ public class TRCSparkMaxEncoder
     public void reset()
     {
         this.smEncoder.setPosition(0);
+    }
+
+    public double pidGet()
+    {
+    	return this.getDistance();
     }
 }
