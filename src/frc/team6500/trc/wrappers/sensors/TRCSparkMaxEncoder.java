@@ -1,47 +1,50 @@
 package frc.team6500.trc.wrappers.sensors;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.*;
 
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.PIDSource;
-
-import com.revrobotics.CANEncoder;
-
-public class TRCSparkMaxEncoder implements PIDSource
+public class TRCSparkMaxEncoder extends CANEncoder implements TRCEncoder
 {
-    private CANSparkMax sparkMax;
-    private CANEncoder smEncoder;
-    private double distancePerPulse;
-    private boolean inverse;
+	/**
+	 * Constructs a CANEncoder.
+	 *
+	 * @param device The Spark Max to which the encoder is attached.
+	 * @param sensorType The encoder type for the motor: kHallEffect or kQuadrature
+	 * @param counts_per_rev The counts per revolution of the encoder
+	 */
+	public TRCSparkMaxEncoder(CANSparkMax device, EncoderType sensorType, int counts_per_rev)
+	{
+		super(device, sensorType, counts_per_rev);
+	}
+	
+	/**
+	 * Constructs a CANEncoder.
+	 *
+	 * @param device The Spark Max to which the encoder is attached.
+	 * @param sensorType The encoder type for the motor: kHallEffect or kQuadrature
+	 * @param counts_per_rev The counts per revolution of the encoder
+	 */
+	public TRCSparkMaxEncoder(CANSparkMax device, AlternateEncoderType sensorType, int counts_per_rev)
+	{
+		super(device, sensorType, counts_per_rev);
+	}
 
+	/**
+	 * Constructs a CANEncoder.
+	 *
+	 * @param device The Spark Max to which the encoder is attached.
+	 */
+	public TRCSparkMaxEncoder(CANSparkMax device)
+	{
+		super(device);
+	}
+	
+	public double getDistance()
+	{
+		return this.getPosition();
+	}
 
-    public TRCSparkMaxEncoder(SpeedController motor, double dpp, boolean reverse)
-    {
-        this.sparkMax = (CANSparkMax) motor;
-        this.smEncoder = new CANEncoder(this.sparkMax);
-        this.distancePerPulse = dpp;
-        this.inverse = reverse;
-    }
-
-    public double getDistance()
-    {
-        if (this.inverse)
-        {
-            return -this.smEncoder.getPosition() * this.distancePerPulse;
-        }
-        else
-        {
-            return this.smEncoder.getPosition() * this.distancePerPulse;
-        }
-    }
-
-    public void reset()
-    {
-        this.smEncoder.setPosition(0);
-    }
-
-    public double pidGet()
-    {
-    	return this.getDistance();
-    }
+	public void reset()
+	{
+		setPosition(0);
+	}
 }
