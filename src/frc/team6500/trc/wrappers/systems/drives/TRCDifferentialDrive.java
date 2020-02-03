@@ -11,7 +11,6 @@ import frc.team6500.trc.wrappers.sensors.TRCEncoder;
 public class TRCDifferentialDrive extends DifferentialDrive
 {
 	TRCEncoder lEncoder, rEncoder;
-	private double maxSpeed;
 	private double maxAutoSpeed;
 
 	/**
@@ -27,7 +26,6 @@ public class TRCDifferentialDrive extends DifferentialDrive
 		super(leftMotor, rightMotor);
 		this.lEncoder = leftEncoder;
 		this.rEncoder = rightEncoder;
-		this.maxSpeed = 1.00;
 		this.maxAutoSpeed = 0.75;
 	}
 
@@ -43,7 +41,8 @@ public class TRCDifferentialDrive extends DifferentialDrive
 
 		fbController.setSetpoint(x);
 		rtController.setSetpoint(z);
-		fbController.setOutputLimits();
+		fbController.setOutputLimits(-maxAutoSpeed, maxAutoSpeed);
+		rtController.setOutputLimits(-maxAutoSpeed, maxAutoSpeed);
 
 		System.out.println("Started auto movement");
 		while (!fbController.atSetpoint() && !rtController.atSetpoint()) // while we still need to move
@@ -63,17 +62,6 @@ public class TRCDifferentialDrive extends DifferentialDrive
 		}
 		System.out.println("Finished auto movement");
 	}
-
-	/**
-	 *	@return the set max speed for the drive
-	 */
-	public double getMaxSpeed() { return this.maxSpeed; }
-
-	/**
-	 *	Set the max speed of the drive
-	 *	@param maxSpeed maxSpeed to set
-	 */
-	public void setMaxSpeed(double maxSpeed) { this.maxSpeed = maxSpeed; }
 
 	/**
 	 *	@return the set max autonomous speed for the drive
