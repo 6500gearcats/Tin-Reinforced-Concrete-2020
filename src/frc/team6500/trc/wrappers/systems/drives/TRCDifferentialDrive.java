@@ -70,7 +70,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 	{
 		if (!hasSensors)
 		{
-			System.out.println("Sensorless drive! Initialize drive with sensors to drive without a driver.")
+			System.out.println("Sensorless drive! Initialize drive with sensors to drive without a driver.");
 			return;
 		}
 		PIDController fbController = new PIDController(1.0, 0.0, 0.0); // forward back controller
@@ -78,8 +78,8 @@ public class TRCDifferentialDrive extends DifferentialDrive
 
 		fbController.setSetpoint(x);
 		rtController.setSetpoint(z);
-		fbController.setOutputLimits(-maxAutoSpeed, maxAutoSpeed);
-		rtController.setOutputLimits(-maxAutoSpeed, maxAutoSpeed);
+		fbController.setIntegratorRange(-maxAutoSpeed, maxAutoSpeed); // set the output range
+		rtController.setIntegratorRange(-maxAutoSpeed, maxAutoSpeed); // set the output range
 
 		gyro.reset();
 		System.out.println("Started auto movement");
