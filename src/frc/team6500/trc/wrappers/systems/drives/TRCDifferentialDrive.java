@@ -81,6 +81,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 		fbController.setOutputLimits(-maxAutoSpeed, maxAutoSpeed);
 		rtController.setOutputLimits(-maxAutoSpeed, maxAutoSpeed);
 
+		gyro.reset();
 		System.out.println("Started auto movement");
 		while (!fbController.atSetpoint() && !rtController.atSetpoint()) // while we still need to move
 		{
@@ -90,7 +91,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			// distance formula √((left-0)^2+(right-0)^2) [0 because we start at zero]
 			distance = Math.sqrt(Math.pow(lEncoder.getDistance(), 2)+Math.pow(rEncoder.getDistance(), 2));
 			// get from gyroscope
-			degrees = 0.0;
+			degrees = gyro.getAngle();
 
 			fbcalc = fbController.calculate(distance);
 			rtcalc = rtController.calculate(degrees);
@@ -98,6 +99,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			curvatureDrive(fbcalc, rtcalc, (x == 0.0));
 		}
 		System.out.println("Finished auto movement");
+		gyro.reset(); // be a good person and clean up our trash
 	}
 
 	/**
