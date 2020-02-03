@@ -1,14 +1,5 @@
 package frc.team6500.trc.wrappers.sensors;
 
-import frc.team6500.trc.util.TRCNetworkData;
-import frc.team6500.trc.util.TRCTypes;
-import frc.team6500.trc.util.TRCTypes.VerbosityType;
-
-import edu.wpi.first.wpilibj.SpeedController;
-
-import frc.team6500.trc.util.TRCTypes.DirectionType;
-import frc.team6500.trc.util.TRCTypes.EncoderType;
-
 public class TRCEncoderGroup implements TRCEncoder
 {
 	private TRCEncoder[] encoders;
