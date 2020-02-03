@@ -14,7 +14,10 @@ public class TRCDifferentialDrive extends DifferentialDrive
 
 	/**
 	 *	Construct a TRCDifferentialDrive with speed controllers and encoders
-	 *	
+	 *	@param leftMotor	the left motor or motors to use
+	 *	@param rightMotor	the right motor or motors to use
+	 *	@param leftEncoder	the left encoder or encoders to use
+	 *	@param rightEncoder	the right encoder or encoders to use
 	 */
 	public TRCDifferentialDrive(SpeedController leftMotor, SpeedController rightMotor, 
 								TRCEncoder leftEncoder, TRCEncoder rightEncoder)
@@ -43,7 +46,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			double distance, degrees;
 			double fbcalc, rtcalc;
 
-			distance = 0.0/* some sort of average between sides */;
+			distance = (lEncoder.getDistance() + rEncoder.getDistance()) / 2.0;
 			degrees = 0.0/* difference between sides */;
 
 			fbcalc = fbController.calculate(distance);
