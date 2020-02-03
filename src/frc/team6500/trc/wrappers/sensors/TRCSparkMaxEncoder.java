@@ -5,7 +5,7 @@ import com.revrobotics.*;
 public class TRCSparkMaxEncoder extends CANEncoder implements TRCEncoder
 {
 	/**
-	 * Constructs a CANEncoder.
+	 * Constructs a TRCSparkMaxEncoder like a CANEncoder.
 	 *
 	 * @param device The Spark Max to which the encoder is attached.
 	 * @param sensorType The encoder type for the motor: kHallEffect or kQuadrature
@@ -17,7 +17,7 @@ public class TRCSparkMaxEncoder extends CANEncoder implements TRCEncoder
 	}
 	
 	/**
-	 * Constructs a CANEncoder.
+	 * Constructs a TRCSparkMaxEncoder like a CANEncoder.
 	 *
 	 * @param device The Spark Max to which the encoder is attached.
 	 * @param sensorType The encoder type for the motor: kHallEffect or kQuadrature
@@ -29,7 +29,7 @@ public class TRCSparkMaxEncoder extends CANEncoder implements TRCEncoder
 	}
 
 	/**
-	 * Constructs a CANEncoder.
+	 * Constructs a TRCSparkMaxEncoder like a CANEncoder.
 	 *
 	 * @param device The Spark Max to which the encoder is attached.
 	 */
