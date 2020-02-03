@@ -1,131 +1,56 @@
 package frc.team6500.trc.wrappers.systems.drives;
 
-import frc.team6500.trc.util.TRCDriveParams;
-import frc.team6500.trc.util.TRCTypes.DifferentialArcadeMode;
-import frc.team6500.trc.util.TRCTypes;
-import frc.team6500.trc.util.TRCTypes.SpeedControllerType;
-
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-
+import frc.team6500.trc.wrappers.sensors.TRCEncoder;
 
 /**
- * A wrapper on top of the standard DifferentialDrive class, to make it easier to add features
+ * Extends the normal DifferentialDrive but adds auto support
  */
-public class TRCDifferentialDrive
+public class TRCDifferentialDrive extends DifferentialDrive
 {
-	// When passing in a TRCDriveParams, we need to know which axis (X or Z to use for rotation)
-    protected DifferentialArcadeMode arcadeMode;
-
-    protected final SpeedController leftMotor;
-	protected final SpeedController rightMotor;
-	public final SpeedController outputMotors[];
-	
-    protected DifferentialDrive drive;
-	
+	TRCEncoder lEncoder, rEncoder;
 
 	/**
-     * Simpler constructor, takes info about the motors and turns it into objects and sets arcadeMode to ZRotation by default.
-     * Motor info should ALWAYS be provided in the following order: front-left, rear-left, front-right, rear-right
-     * 
-     * @param motorPorts The ports the motors are plugged into
-     * @param motorTypes The types of speed controllers the motors are plugged into
+	 *	Construct a TRCDifferentialDrive with speed controllers and encoders
+	 *	
 	 */
-	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion)
+	public TRCDifferentialDrive(SpeedController leftMotor, SpeedController rightMotor, 
+								TRCEncoder leftEncoder, TRCEncoder rightEncoder)
 	{
-		outputMotors = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
-		for (int i = 0; i < inversion.length; i++)
+		super(leftMotor, rightMotor);
+		this.lEncoder = leftEncoder;
+		this.rEncoder = rightEncoder;
+	}
+
+	/**
+	 *	Drive the robot for a specified measurement
+	 *	@param x measurement of forward and back
+	 *	@param y measurement of rotation
+	 */
+	public void pidDrive(double x, double z)
+	{
+		PIDController fbController = new PIDController(1.0, 0.0, 0.0); // forward back controller
+		PIDController rtController = new PIDController(1.0, 0.0, 0.0); // rotate controller
+
+		fbController.setSetpoint(x);
+		rtController.setSetpoint(z);
+
+		System.out.println("Started auto movement");
+		while (!fbController.atSetpoint() && !rtController.atSetpoint()) // while we still need to move
 		{
-			outputMotors[i].setInverted(inversion[i]);
+			double distance, degrees;
+			double fbcalc, rtcalc;
+
+			distance = 0.0/* some sort of average between sides */;
+			degrees = 0.0/* difference between sides */;
+
+			fbcalc = fbController.calculate(distance);
+			rtcalc = rtController.calculate(degrees);
+
+			curvatureDrive(fbcalc, rtcalc, (x == 0.0));
 		}
-        this.leftMotor  = new SpeedControllerGroup(outputMotors[0], outputMotors[1]);
-        this.rightMotor = new SpeedControllerGroup(outputMotors[2], outputMotors[3]);
-
-		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
-		this.arcadeMode = DifferentialArcadeMode.ZRotation;
-	}
-	
-	/**
-     * More specific constructor, takes info about the motors and turns it into objects and sets arcadeMode to what the user needs it to be
-     * Motor info should ALWAYS be provided in the following order: front-left, rear-left, front-right, rear-right
-     * 
-     * @param motorPorts The ports the motors are plugged into
-     * @param motorTypes The types of speed controllers the motors are plugged into
-     * @param arcadeType The axis of controller input which should be used for rotation
-	 */
-	public TRCDifferentialDrive(int[] motorPorts, SpeedControllerType[] motorTypes, boolean[] inversion, DifferentialArcadeMode arcadeType)
-	{
-		outputMotors = TRCTypes.speedControllerCreate(motorPorts, motorTypes);
-		for (int i = 0; i < inversion.length; i++)
-		{
-			outputMotors[i].setInverted(inversion[i]);
-		}
-        this.leftMotor  = new SpeedControllerGroup(outputMotors[0], outputMotors[1]);
-        this.rightMotor = new SpeedControllerGroup(outputMotors[2], outputMotors[3]);
-
-		this.drive = new DifferentialDrive(this.leftMotor, this.rightMotor);
-		this.arcadeMode = arcadeType;
-	}
-	
-	/**
-	 * Convenience method which takes a TRCDriveParams and uses it with the regular arcadeDrive
-	 * 
-	 * @param dps TRCDriveParams to use
-	 */
-	public void arcadeDrive(TRCDriveParams dps)
-	{
-		if (arcadeMode == DifferentialArcadeMode.XRotation)
-		{
-			this.drive.arcadeDrive(dps.getRealY(), dps.getRealX());
-		}
-		else if (arcadeMode == DifferentialArcadeMode.ZRotation)
-		{
-			this.drive.arcadeDrive(dps.getRealY(), dps.getRealZ());
-		}
-	} 
-    
-    /**
-	 * Identical to method from DifferentialDrive
-	 */
-	public void arcadeDrive(double forwardSpeed, double rotationalSpeed, boolean squared)
-	{
-	    this.drive.arcadeDrive(forwardSpeed, rotationalSpeed, squared);
-	}
-
-	public void tankDrive(double leftSpeed, double rightSpeed, boolean squared)
-	{
-		this.drive.tankDrive(leftSpeed, rightSpeed, squared);
-	}
-
-	public void tankDrive(TRCDriveParams dps)
-	{
-		this.tankDrive(dps.getRealX(), dps.getRealY(), true);
-	}
-	
-	/**
-	 * Set which axis should be used for rotation when using the arcadeDrive method, as different drivers prefer different ways
-	 * 
-	 * @param mode Which type of rotation to use, xaxis or zaxis
-	 */
-	public void setArcadeMode (DifferentialArcadeMode mode)
-	{
-		this.arcadeMode = mode;
-	}
-	
-	/**
-	 * Check which axis is being used for rotation when using the arcadeDrive method
-	 * 
-	 * @return Which axis is currently in use with arcadeDrive
-	 */
-	public DifferentialArcadeMode getArcadeMode()
-	{
-		return this.arcadeMode;
-	}
-
-	public SpeedController[] getOutputMotors()
-	{
-		return this.outputMotors;
+		System.out.println("Finished auto movement");
 	}
 }
