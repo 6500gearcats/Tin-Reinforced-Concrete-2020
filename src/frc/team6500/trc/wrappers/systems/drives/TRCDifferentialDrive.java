@@ -99,7 +99,6 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			curvatureDrive(fbcalc, rtcalc, (x == 0.0));
 		}
 		System.out.println("Finished auto movement");
-		gyro.reset(); // be a good person and clean up our trash
 	}
 
 	/**
