@@ -46,7 +46,8 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			double distance, degrees;
 			double fbcalc, rtcalc;
 
-			distance = (lEncoder.getDistance() + rEncoder.getDistance()) / 2.0;
+			// distance formula √((left-0)^2+(right-0)^2) [0 because we start at zero]
+			distance = Math.sqrt(Math.pow(lEncoder.getDistance(), 2)+Math.pow(rEncoder.getDistance(), 2));
 			degrees = 0.0/* difference between sides */;
 
 			fbcalc = fbController.calculate(distance);
