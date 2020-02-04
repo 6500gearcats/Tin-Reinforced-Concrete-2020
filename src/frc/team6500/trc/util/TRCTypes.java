@@ -203,29 +203,6 @@ public class TRCTypes
 		}
 	}
 
-
-	public static Object encoderTypeToObject(int[] ports, double dpp, boolean lowres, boolean inverted, EncoderType type, SpeedController motor)
-	{
-		Object encoder = null;
-
-		switch(type)
-		{
-			case Digital:
-				encoder = new TRCEncoder(ports, dpp, lowres, inverted);
-				break;
-			case Talon:
-				encoder = new TRCTalonEncoder(ports[0], dpp, inverted);
-				break;
-			case SparkMax:
-				encoder = new TRCSparkMaxEncoder(motor, dpp, inverted);
-				break;
-			default:
-				break;
-		}
-
-		return encoder;
-	}
-
 	public static SpeedController controllerTypeToObject(int port, SpeedControllerType type)
 	{
 		SpeedController motor = null;
