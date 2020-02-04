@@ -1,144 +1,158 @@
 package frc.team6500.trc.wrappers.sensors;
 
-import frc.team6500.trc.util.TRCNetworkData;
-import frc.team6500.trc.util.TRCTypes.GyroType;
-import frc.team6500.trc.util.TRCTypes.VerbosityType;
-
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-public class TRCGyroBase extends GyroBase
+public class TRCnavXGyro extends AHRS implements Gyro
 {
-	private Object installedGyro;
-	private GyroType internalGyroType;
-	
 	/**
-	 * A gyro which provides a uniform way to use any possible type of gyro on the robot without extra classes
-	 * 
-	 * @param gyroType Which type of gyro to use
+	 * Constructs the AHRS class using SPI communication, overriding the 
+	 * default update rate with a custom rate which may be from 4 to 200, 
+	 * representing the number of updates per second sent by the sensor.  
+	 *<p>
+	 * This constructor should be used if communicating via SPI.
+	 *<p>
+	 * Note that increasing the update rate may increase the 
+	 * CPU utilization.
+	 *<p>
+	 * @param spi_port_id SPI Port to use
+	 * @param update_rate_hz Custom Update Rate (Hz)
 	 */
-	public TRCGyroBase (GyroType gyroType)
+	public TRCnavXGyro(SPI.Port spi_port_id, byte update_rate_hz)
 	{
-		internalGyroType = gyroType;
-		
-		switch (gyroType)
-		{
-			case ADXRS450:
-				installedGyro = new ADXRS450_Gyro();
-				((GyroBase) installedGyro).reset();
-				break;
-			case NavX:
-				installedGyro = new AHRS(I2C.Port.kMXP);
-				break;
-			default:
-				break;
-		}
-
-		TRCNetworkData.createDataPoint("Gyro " + this.toString());
-		TRCNetworkData.logString(VerbosityType.Log_Info, "Gyro " + this.toString() + " is online.");
+		super(spi_port_id, update_rate_hz);
 	}
 
+	/**
+	 * The AHRS class provides an interface to AHRS capabilities
+	 * of the KauaiLabs navX Robotics Navigation Sensor via SPI, I2C and
+	 * Serial (TTL UART and USB) communications interfaces on the RoboRIO.
+	 *
+	 * The AHRS class enables access to basic connectivity and state information,
+	 * as well as key 6-axis and 9-axis orientation information (yaw, pitch, roll,
+	 * compass heading, fused (9-axis) heading and magnetic disturbance detection.
+	 *
+	 * Additionally, the ARHS class also provides access to extended information
+	 * including linear acceleration, motion detection, rotation detection and sensor
+	 * temperature.
+	 *
+	 * If used with the navX Aero, the AHRS class also provides access to
+	 * altitude, barometric pressure and pressure sensor temperature data
+	 *
+	 * This constructor allows the specification of a custom SPI bitrate, in bits/second.
+	 *
+	 * @param spi_port_id SPI Port to use
+	 * @param spi_bitrate SPI bitrate (Maximum:  2,000,000)
+	 * @param update_rate_hz Custom Update Rate (Hz)
+	 */
+
+	public TRCnavXGyro(SPI.Port spi_port_id, int spi_bitrate, byte update_rate_hz)
+	{
+		super(spi_port_id, spi_bitrate, update_rate_hz);
+	}
+
+	/**
+	 * Constructs the AHRS class using I2C communication, overriding the 
+	 * default update rate with a custom rate which may be from 4 to 200, 
+	 * representing the number of updates per second sent by the sensor.  
+	 *<p>
+	 * This constructor should be used if communicating via I2C.
+	 *<p>
+	 * Note that increasing the update rate may increase the 
+	 * CPU utilization.
+	 *<p>
+	 * @param i2c_port_id I2C Port to use
+	 * @param update_rate_hz Custom Update Rate (Hz)
+	 */
+	public TRCnavXGyro(I2C.Port i2c_port_id, byte update_rate_hz)
+	{
+		super(i2c_port_id, update_rate_hz);
+	}
+
+	/**
+	 * Constructs the AHRS class using serial communication, overriding the 
+	 * default update rate with a custom rate which may be from 4 to 200, 
+	 * representing the number of updates per second sent by the sensor.  
+	 *<p>
+	 * This constructor should be used if communicating via either 
+	 * TTL UART or USB Serial interface.
+	 *<p>
+	 * Note that the serial interfaces can communicate either 
+	 * processed data, or raw data, but not both simultaneously.
+	 * If simultaneous processed and raw data are needed, use
+	 * one of the register-based interfaces (SPI or I2C).
+	 *<p>
+	 * Note that increasing the update rate may increase the 
+	 * CPU utilization.
+	 *<p>
+	 * @param serial_port_id SerialPort to use
+	 * @param data_type either kProcessedData or kRawData
+	 * @param update_rate_hz Custom Update Rate (Hz)
+	 */
+	public TRCnavXGyro(SerialPort.Port serial_port_id, SerialDataType data_type, byte update_rate_hz)
+	{
+		super(serial_port_id, data_type, update_rate_hz);
+	}
+
+	/**
+	 * Constructs the AHRS class using SPI communication and the default update rate.  
+	 *<p>
+	 * This constructor should be used if communicating via SPI.
+	 */
+	public TRCnavXGyro()
+	{
+		super();
+	}
+
+	/**
+	 * Constructs the AHRS class using SPI communication and the default update rate.  
+	 *<p>
+	 * This constructor should be used if communicating via SPI.
+	 *<p>
+	 * @param spi_port_id SPI port to use.
+	 */
+	public TRCnavXGyro(SPI.Port spi_port_id)
+	{
+		super(spi_port_id);
+	}
+
+	/**
+	 * Constructs the AHRS class using I2C communication and the default update rate.  
+	 *<p>
+	 * This constructor should be used if communicating via I2C.
+	 *<p>
+	 * @param i2c_port_id I2C port to use
+	 */
+	public TRCnavXGyro(I2C.Port i2c_port_id)
+	{
+		super(i2c_port_id);
+	}
 	
+
 	/**
-	 * Calibrate the gyro.  Note that this can take several seconds so you must keep the robot still, or else https://j.gifs.com/PZ9O3y.gif
+	 * Constructs the AHRS class using serial communication and the default update rate, 
+	 * and returning processed (rather than raw) data.  
+	 *<p>
+	 * This constructor should be used if communicating via either 
+	 * TTL UART or USB Serial interface.
+	 *<p>
+	 * @param serial_port_id SerialPort to use
 	 */
-	@Override
-	public void calibrate() {
-		try
-		{
-			((GyroBase) installedGyro).calibrate();
-			TRCNetworkData.logString(VerbosityType.Log_Debug, "Gyro " + this.toString() + " is calibrated.");
-		}
-		catch (Exception e)
-		{
-			TRCNetworkData.logString(VerbosityType.Log_Error, "Gyro " + this.toString() + " failed to calibrate.");
-			return;
-		}
+	public TRCnavXGyro(SerialPort.Port serial_port_id)
+	{
+		super(serial_port_id);
 	}
 
 	/**
-	 * Get the current angle of the gryo, if its initial position was 0 degrees
-	 * 
-	 * @return The gyro's current angle modulo a full circle to ignore the number of rotations
+	 *	On navX, the gyro must be calibrated manually. This mearly exists to satisfy Gyro, but will only print
+	 *	that automated calibration is not supported
 	 */
-	@Override
-	public double getAngle() {
-		try
-		{
-			if (this.internalGyroType != GyroType.NavX)
-			{
-				TRCNetworkData.updateDataPoint("Gyro " + this.toString(), ((GyroBase) installedGyro).getAngle() % 360);
-				return ((GyroBase) installedGyro).getAngle() % 360;
-			}
-			else
-			{
-				TRCNetworkData.updateDataPoint("Gyro " + this.toString(), ((AHRS) installedGyro).getAngle() % 360);
-				return ((AHRS) installedGyro).getAngle() % 360;
-			}
-		}
-		catch (Exception e)
-		{
-			TRCNetworkData.updateDataPoint("Gyro " + this.toString(), 0);
-			return 0;
-		}
-	}
-
-	/**
-	 * Get how fast the gyro is rotating
-	 * 
-	 * @return The rotation speed of the gyro in degrees/second
-	 */
-	@Override
-	public double getRate() {
-		try
-		{
-			if (this.internalGyroType != GyroType.NavX)
-			{
-				return ((GyroBase) installedGyro).getRate();
-			}
-			else
-			{
-				return ((AHRS) installedGyro).getRate();
-			}
-		}
-		catch (Exception e)
-		{
-			return 0;
-		}
-	}
-
-	/**
-	 * Reset the gyro, effectively making the current angle and position the initial one.  Do this once the robot is fully settled
-	 */
-	@Override
-	public void reset() {
-		try
-		{
-			if (this.internalGyroType != GyroType.NavX)
-			{
-				((GyroBase) installedGyro).reset();
-			}
-			else
-			{
-				((AHRS) installedGyro).reset();
-				((AHRS) installedGyro).zeroYaw();
-			}
-			TRCNetworkData.logString(VerbosityType.Log_Debug, "Gyro " + this.toString() + " is reset.");
-		}
-		catch (Exception e)
-		{
-			return;
-		}
-	}
-
-	@Override
-	public void close()	{
-		if (this.internalGyroType == GyroType.ADXRS450)
-		{
-			((ADXRS450_Gyro) installedGyro).close();
-		}
+	public void calibrate() 
+	{
+		System.out.println("Automated calibration not supported on navX.");
 	}
 }

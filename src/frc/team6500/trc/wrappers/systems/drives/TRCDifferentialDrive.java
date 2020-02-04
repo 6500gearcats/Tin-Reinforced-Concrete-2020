@@ -3,8 +3,9 @@ package frc.team6500.trc.wrappers.systems.drives;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 import frc.team6500.trc.wrappers.sensors.TRCEncoder;
-import frc.team6500.trc.wrappers.sensors.TRCGyroBase;
 
 /**
  * Extends the normal DifferentialDrive but adds auto support
@@ -14,7 +15,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 	private final static double DEFAULT_AUTO_SPEED = 0.75;
 
 	TRCEncoder lEncoder, rEncoder;
-	TRCGyroBase gyro;
+	Gyro gyro;
 	private double maxAutoSpeed;
 	private boolean hasSensors;
 
@@ -26,7 +27,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 	 *	@param rightEncoder	the right encoder or encoders to use
 	 */
 	public TRCDifferentialDrive(SpeedController leftMotor, SpeedController rightMotor, 
-								TRCEncoder leftEncoder, TRCEncoder rightEncoder, TRCGyroBase gyroscope)
+								TRCEncoder leftEncoder, TRCEncoder rightEncoder, Gyro gyroscope)
 	{
 		this(leftMotor, rightMotor, leftEncoder, rightEncoder, gyroscope, DEFAULT_AUTO_SPEED);
 	}
@@ -40,7 +41,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 	 *	@param maxAutoSpeed the maximum speed the robot will drive when driving pid style
 	 */
 	public TRCDifferentialDrive(SpeedController leftMotor, SpeedController rightMotor, 
-								TRCEncoder leftEncoder, TRCEncoder rightEncoder, TRCGyroBase gyroscope,
+								TRCEncoder leftEncoder, TRCEncoder rightEncoder, Gyro gyroscope,
 								double maxAutoSpeed)
 	{
 		super(leftMotor, rightMotor);
