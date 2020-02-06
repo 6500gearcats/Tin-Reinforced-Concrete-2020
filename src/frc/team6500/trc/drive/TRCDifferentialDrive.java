@@ -85,17 +85,17 @@ public class TRCDifferentialDrive extends DifferentialDrive
 		fbController.setIntegratorRange(-maxAutoSpeed, maxAutoSpeed); // set the output range
 		rtController.setIntegratorRange(-maxAutoSpeed, maxAutoSpeed); // set the output range
 
-		gyro.reset();
+		if (gyro != null) gyro.reset();
 		System.out.println("Started auto movement");
 		while (!fbController.atSetpoint() && !rtController.atSetpoint()) // while we still need to move
 		{
-			double distance, degrees;
+			double distance, degrees = 0.0;
 			double fbcalc, rtcalc;
 
 			// distance formula √((left-0)^2+(right-0)^2) [0 because we start at zero]
 			distance = Math.sqrt(Math.pow(lEncoder.getDistance(), 2)+Math.pow(rEncoder.getDistance(), 2));
 			// get from gyroscope
-			degrees = gyro.getAngle();
+			if (gyro != null) degrees = gyro.getAngle();
 
 			fbcalc = fbController.calculate(distance);
 			rtcalc = rtController.calculate(degrees);
