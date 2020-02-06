@@ -25,6 +25,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 	 *	@param rightMotor	the right motor or motors to use
 	 *	@param leftEncoder	the left encoder or encoders to use
 	 *	@param rightEncoder	the right encoder or encoders to use
+	 *	@param gyroscope	the gyroscope to use for rotation (pass null if none)
 	 */
 	public TRCDifferentialDrive(SpeedController leftMotor, SpeedController rightMotor, 
 								TRCEncoder leftEncoder, TRCEncoder rightEncoder, Gyro gyroscope)
@@ -38,6 +39,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 	 *	@param rightMotor	the right motor or motors to use
 	 *	@param leftEncoder	the left encoder or encoders to use
 	 *	@param rightEncoder	the right encoder or encoders to use
+	 *	@param gyroscope	the gyroscope to use for rotation (pass null if none)
 	 *	@param maxAutoSpeed the maximum speed the robot will drive when driving pid style
 	 */
 	public TRCDifferentialDrive(SpeedController leftMotor, SpeedController rightMotor, 
