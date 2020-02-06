@@ -1,11 +1,11 @@
-package frc.team6500.trc.wrappers.systems.drives;
+package frc.team6500.trc.drive;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-import frc.team6500.trc.wrappers.sensors.TRCEncoder;
+import frc.team6500.trc.sensor.TRCEncoder;
 
 /**
  * Extends the normal DifferentialDrive but adds auto support

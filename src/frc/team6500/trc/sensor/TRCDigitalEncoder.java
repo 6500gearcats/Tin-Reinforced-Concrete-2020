@@ -1,7 +1,6 @@
-package frc.team6500.trc.wrappers.sensors;
+package frc.team6500.trc.sensor;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalSource;
 
 public class TRCDigitalEncoder extends Encoder implements TRCEncoder 

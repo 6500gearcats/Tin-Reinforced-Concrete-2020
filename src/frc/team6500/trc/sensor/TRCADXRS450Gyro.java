@@ -1,4 +1,4 @@
-package frc.team6500.trc.wrappers.sensors;
+package frc.team6500.trc.sensor;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;

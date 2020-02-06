@@ -3,7 +3,7 @@
  * 		totally static class to handle input from the joysticks
  */
 
-package frc.team6500.trc.systems;
+package frc.team6500.trc.system;
 
 import java.util.ArrayList;
 import java.util.HashMap;

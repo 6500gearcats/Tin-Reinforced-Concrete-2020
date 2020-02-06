@@ -1,4 +1,4 @@
-package frc.team6500.trc.wrappers.sensors;
+package frc.team6500.trc.sensor;
 
 public interface TRCEncoder
 {
