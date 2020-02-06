@@ -1,7 +1,6 @@
 package frc.team6500.trc.util;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
@@ -15,11 +14,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-
-import frc.team6500.trc.sensor.TRCEncoder;
-import frc.team6500.trc.sensor.TRCSparkMaxEncoder;
-import frc.team6500.trc.sensor.TRCTalonEncoder;
-
 
 /**
  * Enumerations used to specify which type of something should be used in the creation or execution of something which has several

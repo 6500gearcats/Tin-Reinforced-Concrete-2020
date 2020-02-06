@@ -74,6 +74,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			System.out.println("Sensorless drive! Initialize drive with sensors to drive without a driver.");
 			return;
 		}
+
 		PIDController fbController = new PIDController(1.0, 0.0, 0.0); // forward back controller
 		PIDController rtController = new PIDController(1.0, 0.0, 0.0); // rotate controller
 
@@ -100,6 +101,8 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			curvatureDrive(fbcalc, rtcalc, (x == 0.0));
 		}
 		System.out.println("Finished auto movement");
+		fbController.close();
+		rtController.close();
 	}
 
 	/**
