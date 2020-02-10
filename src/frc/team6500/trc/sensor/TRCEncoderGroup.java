@@ -10,13 +10,12 @@ public class TRCEncoderGroup implements TRCEncoder
 	 */
 	public TRCEncoderGroup(TRCEncoder encoder, TRCEncoder... encoders)
 	{
-		encoders = new TRCEncoder[encoders.length + 1];
-		encoders[0] = encoder;
+		this.encoders = new TRCEncoder[encoders.length + 1];
+		this.encoders[0] = encoder;
 		// SendableRegistry.addChild(this, encoder);
 		for (int i = 0; i < encoders.length; i++)
 		{
-			TRCEncoder e = encoders[i];
-			encoders[i + 1] = e;
+			this.encoders[i + 1] = encoders[i];
 			// SendableRegistry.addChild(this, e);
 		}
 	}
