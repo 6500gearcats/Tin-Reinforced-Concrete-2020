@@ -92,8 +92,8 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			double distance, degrees = 0.0;
 			double fbcalc, rtcalc;
 
-			// distance formula √((left-0)^2+(right-0)^2) [0 because we start at zero]
-			distance = Math.sqrt(Math.pow(lEncoder.getDistance(), 2)+Math.pow(rEncoder.getDistance(), 2));
+			// just get average because hopefully this will calculate only when the robot has moved a little bit
+			distance = (lEncoder.getDistance() + rEncoder.getDistance()) / 2.0;
 			// get from gyroscope
 			if (gyro != null) degrees = gyro.getAngle();
 
