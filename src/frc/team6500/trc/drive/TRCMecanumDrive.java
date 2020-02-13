@@ -3,6 +3,7 @@ package frc.team6500.trc.drive;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 
 import frc.team6500.trc.sensor.TRCEncoder;
 
@@ -68,7 +69,33 @@ public class TRCMecanumDrive extends MecanumDrive
 	 */
 	public void pidDrive(double y, double x, double z)
 	{
-		// TODO: implement
+		if (!hasSensors)
+		{
+			System.out.println("Sensorless drive! Initialize drive with sensors to drive without a driver.");
+			return;
+		}
+
+		PIDController fbController, lrController, rtController;
+
+		fbController = new PIDController(1.0, 0.0, 0.0);
+		lrController = new PIDController(1.0, 0.0, 0.0);
+		rtController = new PIDController(1.0, 0.0, 0.0);
+
+		fbController.setSetpoint(y);
+		lrController.setSetpoint(x);
+		rtController.setSetpoint(z);
+
+		while (!fbController.atSetpoint() && !lrController.atSetpoint() && !rtController.atSetpoint()) // while we still need to move
+		{
+			double forwardBack, leftRight, rotation = 0.0;
+			double fbcalc, lrcalc, rtcalc;
+
+			// forwardBack = 
+		}
+
+		fbController.close();
+		lrController.close();
+		rtController.close();
 	}
 
 	/**
