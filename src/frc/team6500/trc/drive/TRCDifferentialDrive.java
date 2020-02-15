@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
 import frc.team6500.trc.sensor.TRCEncoder;
 
@@ -62,6 +63,7 @@ public class TRCDifferentialDrive extends DifferentialDrive
 	public TRCDifferentialDrive(SpeedController leftMotor, SpeedController rightMotor)
 	{
 		super(leftMotor, rightMotor);
+		this.hasSensors = false;
 	}
 
 	/**
@@ -77,32 +79,39 @@ public class TRCDifferentialDrive extends DifferentialDrive
 			return;
 		}
 
-		PIDController fbController = new PIDController(1.0, 0.0, 0.0); // forward back controller
-		PIDController rtController = new PIDController(1.0, 0.0, 0.0); // rotate controller
+		PIDController fbController = new PIDController(0.2, 0.0, 0.0); // forward back controller
+		PIDController rtController = new PIDController(0.2, 0.0, 0.0); // rotate controller
 
 		fbController.setSetpoint(x);
 		rtController.setSetpoint(z);
-		fbController.setIntegratorRange(-maxAutoSpeed, maxAutoSpeed); // set the output range
-		rtController.setIntegratorRange(-maxAutoSpeed, maxAutoSpeed); // set the output range
+		fbController.setTolerance(0.5);
+		rtController.setTolerance(2);
 
-		if (gyro != null) gyro.reset();
-		System.out.println("Started auto movement");
-		while (!fbController.atSetpoint() && !rtController.atSetpoint()) // while we still need to move
+		do
 		{
 			double distance, degrees = 0.0;
-			double fbcalc, rtcalc;
+			int rtModifier = 1;
+			double fbcalc, rtcalc, fbraw, rtraw;
 
 			// just get average because hopefully this will calculate only when the robot has moved a little bit
 			distance = (lEncoder.getDistance() + rEncoder.getDistance()) / 2.0;
 			// get from gyroscope
-			if (gyro != null) degrees = gyro.getAngle();
+			if (z == 0.0) rtModifier = 0;
+			else if (gyro != null) degrees = gyro.getAngle();
 
-			fbcalc = fbController.calculate(distance);
-			rtcalc = rtController.calculate(degrees);
+			fbraw = fbController.calculate(distance);
+			rtraw = rtController.calculate(degrees);
+			fbcalc = -1 * MathUtil.clamp(fbraw, -maxAutoSpeed, maxAutoSpeed);
+			rtcalc = -1 * MathUtil.clamp(rtraw, -maxAutoSpeed, maxAutoSpeed) * rtModifier;
+
+			// System.out.println("   distance: " + distance + " raw: " + fbraw + " calculation: " + fbcalc);
+			// System.out.println("   rotation: " + degrees);
+			// System.out.println("calculation: " + rtcalc);
 
 			curvatureDrive(fbcalc, rtcalc, (x == 0.0));
-		}
-		System.out.println("Finished auto movement");
+		} 
+		while (!fbController.atSetpoint() || !rtController.atSetpoint()); // while we still need to move
+		feed();
 		fbController.close();
 		rtController.close();
 	}
