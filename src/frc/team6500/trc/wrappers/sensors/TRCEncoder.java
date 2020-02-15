@@ -116,6 +116,11 @@ public class TRCEncoder
 		TRCNetworkData.updateDataPoint("Encoder " + this.internalEncoder.toString(), this.internalEncoder.getDistance());
 		return this.internalEncoder.getDistance();
 	}
+
+	public double getRate()
+	{
+		return this.internalEncoder.getRate();
+	}
 	
 	/**
 	 * Reset this encoder's distance counter to 0

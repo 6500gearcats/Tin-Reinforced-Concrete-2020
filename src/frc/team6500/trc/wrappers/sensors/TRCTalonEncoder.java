@@ -28,6 +28,11 @@ public class TRCTalonEncoder
         }
     }
 
+    public double getRate()
+    {
+        return this.talon.getSelectedSensorVelocity();
+    }
+
     public void reset()
     {
         this.talon.setSelectedSensorPosition(0);

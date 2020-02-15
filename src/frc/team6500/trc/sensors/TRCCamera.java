@@ -28,7 +28,7 @@ public class TRCCamera
     /**
      * Initialize the camera so it can be viewed from 
      */
-    public static void initializeCamera()
+    public static void initialize()
     {
         //UsbCameraInfo cameraInfo = CameraServerJNI.enumerateUsbCameras()[0];
         //camera = new UsbCamera(cameraInfo.name, cameraInfo.path);

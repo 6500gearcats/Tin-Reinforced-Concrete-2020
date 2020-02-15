@@ -38,7 +38,7 @@ public class TRCNetworkData
      * 
      * @param DIType Which interface should be used for sending data, see {@link DataInterfaceType}.  Board is preferred except in select scenarios.
      */
-    public static void initializeNetworkData(DataInterfaceType DIType)
+    public static void initialize(DataInterfaceType DIType)
     {
         options = new HashMap<Integer, SendableChooser<Integer>>();
         dataPoints = new HashMap<String, NetworkTableEntry>();

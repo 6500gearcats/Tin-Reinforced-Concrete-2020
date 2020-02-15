@@ -43,7 +43,7 @@ public class TRCDrivePID
      * @param driveBaseType The type of the robot's drivetrain {@link DriveType}
      * @param topSpeed Fastest speed the robot should go in autonomous
      */
-    public static void initializeTRCDrivePID(TRCEncoderSet encoderset, TRCGyroBase gyroBase, Object driveBase, DriveType driveBaseType, double topSpeed)
+    public static void initialize(TRCEncoderSet encoderset, TRCGyroBase gyroBase, Object driveBase, DriveType driveBaseType, double topSpeed)
     {
         encoders = encoderset;
         gyro = gyroBase;

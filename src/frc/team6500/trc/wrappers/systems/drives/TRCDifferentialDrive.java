@@ -128,4 +128,9 @@ public class TRCDifferentialDrive
 	{
 		return this.outputMotors;
 	}
+
+	public DifferentialDrive getInternalDrive()
+	{
+		return this.drive;
+	}
 }

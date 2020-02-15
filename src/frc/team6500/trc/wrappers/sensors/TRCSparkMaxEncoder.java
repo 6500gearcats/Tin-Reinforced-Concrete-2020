@@ -34,6 +34,11 @@ public class TRCSparkMaxEncoder
         }
     }
 
+    public double getRate()
+    {
+        return this.smEncoder.getVelocity();
+    }
+
     public void reset()
     {
         this.smEncoder.setPosition(0);

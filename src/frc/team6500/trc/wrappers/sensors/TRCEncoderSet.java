@@ -1,8 +1,6 @@
 package frc.team6500.trc.wrappers.sensors;
 
-import frc.team6500.trc.util.TRCNetworkData;
 import frc.team6500.trc.util.TRCTypes;
-import frc.team6500.trc.util.TRCTypes.VerbosityType;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -42,7 +40,7 @@ public class TRCEncoderSet
 		{
 			int[] encoderPorts = new int[] {this.ports[wheel * 2], this.ports[(wheel * 2) + 1]};
 			
-			if (wheel >= this.numwheels / 2) // Right wheels
+			if (wheel >= this.numwheels / 2 && this.numwheels >= 4) // Right wheels
 			{
 				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, true, this.types[wheel], this.motors[wheel]);
 			}
@@ -51,15 +49,13 @@ public class TRCEncoderSet
 				this.internalEncoders[wheel] = TRCTypes.encoderTypeToObject(encoderPorts, this.distancesPerPulse[wheel], this.lowresolution, false, this.types[wheel], this.motors[wheel]);
 			}
 		}
-
-		TRCNetworkData.createDataPoint("EncoderSet " + this.toString());
 	}
 	
 	
 	/**
 	 * Resets all encoders to zero distance
 	 */
-	public void resetAllEncoders()
+	public void reset()
 	{
 		for (int i = 0; i < this.internalEncoders.length; i++)
 		{
@@ -76,8 +72,6 @@ public class TRCEncoderSet
 				((TRCSparkMaxEncoder) this.internalEncoders[i]).reset();
 			}
 		}
-
-		TRCNetworkData.logString(VerbosityType.Log_Debug, "EncoderSet " + this.toString() + " has been reset");
 	}
 	
 	/**
@@ -149,7 +143,6 @@ public class TRCEncoderSet
 			}
 		}
 		
-		TRCNetworkData.updateDataPoint("EncoderSet " + this.toString(), distancesum / this.internalEncoders.length);
 		return distancesum / this.internalEncoders.length;
 	}
 
@@ -178,7 +171,6 @@ public class TRCEncoderSet
 			}
 		}
 		
-		TRCNetworkData.updateDataPoint("EncoderSet " + this.toString(), distancesum / this.internalEncoders.length);
 		return distancesum / this.internalEncoders.length;
 	}
 	
@@ -203,6 +195,52 @@ public class TRCEncoderSet
 			return ((TRCSparkMaxEncoder) this.internalEncoders[encodernum]).getDistance();
 		}
 		return 0.0;
+	}
+
+	public double getRate()
+	{
+		double ratesum = 0.0;
+
+		for (int i = 0; i < this.internalEncoders.length; i++)
+		{
+			if (this.types[i] == EncoderType.Digital)
+			{
+				ratesum += Math.abs(((TRCEncoder) this.internalEncoders[i]).getRate());
+			}
+			else if (this.types[i] == EncoderType.Talon)
+			{
+				ratesum += Math.abs(((TRCTalonEncoder) this.internalEncoders[i]).getRate());
+			}
+			else if (this.types[i] == EncoderType.SparkMax)
+			{
+				ratesum += Math.abs(((TRCSparkMaxEncoder) this.internalEncoders[i]).getRate());
+			}
+		}
+
+		return ratesum / this.numwheels;
+	}
+
+	public double getDistance()
+	{
+		double distancesum = 0.0;
+		
+		for (int i = 0; i < this.internalEncoders.length; i++)
+		{
+			if (this.types[i] == EncoderType.Digital)
+			{
+				distancesum += ((TRCEncoder) this.internalEncoders[i]).getDistance();
+			}
+			else if (this.types[i] == EncoderType.Talon)
+			{
+				distancesum += ((TRCTalonEncoder) this.internalEncoders[i]).getDistance();
+			}
+			else if (this.types[i] == EncoderType.SparkMax)
+			{
+				distancesum += ((TRCSparkMaxEncoder) this.internalEncoders[i]).getDistance();
+			}
+		}
+		
+		return distancesum / this.internalEncoders.length;
 	}
 	
 	/**
