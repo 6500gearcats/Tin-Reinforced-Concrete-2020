@@ -146,7 +146,7 @@ public class TRCEncoder
 	 * 
 	 * @param inverted Whether the output values should be negated or not
 	 */
-	public void setReverse(boolean inverted)
+	public void setInverted(boolean inverted)
 	{
 		this.reverse = inverted;
 		this.internalEncoder.setReverseDirection(this.reverse);
@@ -167,7 +167,7 @@ public class TRCEncoder
 	 * 
 	 * @return Whether this encoder is currently configured to negate its output values
 	 */
-	public boolean getReverse()
+	public boolean getInverted()
 	{
 		return this.reverse;
 	}

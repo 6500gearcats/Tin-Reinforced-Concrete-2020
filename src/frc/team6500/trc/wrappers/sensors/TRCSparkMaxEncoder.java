@@ -10,15 +10,16 @@ public class TRCSparkMaxEncoder
 {
     private CANSparkMax sparkMax;
     private CANEncoder smEncoder;
-    private double distancePerPulse;
+    private double multiplier;
     private boolean inverse;
 
 
-    public TRCSparkMaxEncoder(SpeedController motor, double dpp, boolean reverse)
+    public TRCSparkMaxEncoder(SpeedController motor, double multiplier, boolean reverse)
     {
         this.sparkMax = (CANSparkMax) motor;
         this.smEncoder = new CANEncoder(this.sparkMax);
-        this.distancePerPulse = dpp;
+        this.smEncoder.setPositionConversionFactor(multiplier);
+        this.multiplier = multiplier;
         this.inverse = reverse;
     }
 
@@ -26,17 +27,27 @@ public class TRCSparkMaxEncoder
     {
         if (this.inverse)
         {
-            return -this.smEncoder.getPosition() * this.distancePerPulse;
+            return -this.smEncoder.getPosition();
         }
         else
         {
-            return this.smEncoder.getPosition() * this.distancePerPulse;
+            return this.smEncoder.getPosition();
         }
     }
 
     public double getRate()
     {
         return this.smEncoder.getVelocity();
+    }
+
+    public void setInverted(boolean invert)
+    {
+        this.smEncoder.setInverted(invert);
+    }
+
+    public boolean getInverted()
+    {
+        return this.smEncoder.getInverted();
     }
 
     public void reset()

@@ -242,6 +242,25 @@ public class TRCEncoderSet
 		
 		return distancesum / this.internalEncoders.length;
 	}
+
+	public void setInverted(boolean invert)
+	{
+		for (int i = 0; i < this.internalEncoders.length; i++)
+		{
+			if (this.types[i] == EncoderType.Digital)
+			{
+				((TRCEncoder) this.internalEncoders[i]).setInverted(invert);
+			}
+			else if (this.types[i] == EncoderType.Talon)
+			{
+				((TRCTalonEncoder) this.internalEncoders[i]).setInverted(invert);
+			}
+			else if (this.types[i] == EncoderType.SparkMax)
+			{
+				((TRCSparkMaxEncoder) this.internalEncoders[i]).setInverted(invert);
+			}
+		}
+	}
 	
 	/**
 	 * Use this method after driving in a straight line to calibrate them to account for mechanical irregularities

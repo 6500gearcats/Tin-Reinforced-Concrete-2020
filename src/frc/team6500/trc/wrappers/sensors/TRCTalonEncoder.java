@@ -33,6 +33,16 @@ public class TRCTalonEncoder
         return this.talon.getSelectedSensorVelocity();
     }
 
+    public void setInverted(boolean inverted)
+    {
+        this.talon.setInverted(inverted);
+    }
+
+    public boolean getInverted()
+    {
+        return this.talon.getInverted();
+    }
+
     public void reset()
     {
         this.talon.setSelectedSensorPosition(0);

@@ -4,10 +4,17 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import javax.xml.parsers.*;
 import java.io.*;
+import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import frc.team6500.trc.auto.TRCAutoEvent;
+import frc.team6500.trc.auto.TRCAutoManager;
+import frc.team6500.trc.auto.TRCAutoPath;
+import frc.team6500.trc.auto.TRCAutoRoutine;
 import frc.team6500.trc.util.TRCTypes.*;
 
 public class TRCConfigParser
@@ -32,11 +39,36 @@ public class TRCConfigParser
         }
     }
 
-    public static void initialize(String configString)
+    public static void initialize(boolean useDefaultInputFile, boolean useDefaultAutoFile)
     {
         try
         {
             builder = factory.newDocumentBuilder();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        if (useDefaultInputFile)
+        {
+            parseInputConfig(readInputConfig());
+        }
+        if (useDefaultAutoFile)
+        {
+            parseAutoConfig(readInputConfig());
+        }
+    }
+
+    public static void initialize()
+    {
+        initialize(true, true);
+    }
+
+    public static void parseInputConfig(String configString)
+    {
+        try
+        {
             doc = builder.parse(new InputSource(new StringReader(configString)));
         }
         catch (Exception e)
@@ -44,16 +76,6 @@ public class TRCConfigParser
             e.printStackTrace();
         }
 
-        updateConfig(configString);
-    }
-
-    public static void initialize()
-    {
-        initialize(readInputConfig());
-    }
-
-    public static void updateConfig(String configString)
-    {
         Element root = doc.getDocumentElement();
         
         NodeList controllerNodeList = root.getElementsByTagName("controller");
@@ -198,6 +220,118 @@ public class TRCConfigParser
                     TRCInputManager.registerDPSBind(axes, controllerBindElement.getAttribute("name"));
                 }
             }
+        }
+    }
+
+    public static void parseAutoConfig(String configString)
+    {
+        try
+        {
+            doc = builder.parse(new InputSource(new StringReader(configString)));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        Element root = doc.getDocumentElement();
+        NodeList autoPathNodeList = root.getElementsByTagName("auto-path");
+        for (int i = 0; i < autoPathNodeList.getLength(); i++)
+        {
+            Node autoPathNode = autoPathNodeList.item(i);
+            Element autoPathElement = (Element) autoPathNode;
+            String name = autoPathElement.getAttribute("name");
+            NodeList translationNodeList = autoPathElement.getElementsByTagName("translation");
+
+            Pose2d startPose = new Pose2d();
+            Pose2d endPose = new Pose2d();
+            ArrayList<Translation2d> translationArray = new ArrayList<Translation2d>();
+
+            for (int j = 0; j < translationNodeList.getLength(); j++)
+            {
+                if (translationNodeList.item(j).getNodeType() != Node.ELEMENT_NODE) { continue; }
+                Element translationBindElement = (Element) translationNodeList.item(j);
+                double x = safeParseDouble(translationBindElement.getAttribute("x"));
+                double y = safeParseDouble(translationBindElement.getAttribute("y"));
+                if (Double.isNaN(x) || Double.isNaN(y))
+                {
+                    System.out.println("Invalid translation within auto-path \"" + name + "\", one of x: " + translationBindElement.getAttribute("x") + " or y: " + translationBindElement.getAttribute("y") + " is not a good double.");
+                    continue;
+                }
+
+                translationArray.add(new Translation2d(x, y));
+            }
+
+            TRCAutoPath path = new TRCAutoPath(startPose, translationArray.subList(0, translationArray.size()), endPose);
+            TRCAutoManager.registerPath(name, path);
+        }
+
+        NodeList autoRoutineNodeList = root.getElementsByTagName("auto-routine");
+        for (int i = 0; i < autoRoutineNodeList.getLength(); i++)
+        {
+            TRCAutoRoutine routine = new TRCAutoRoutine();
+            Node autoRoutineNode = autoRoutineNodeList.item(i);
+            Element autoRoutineElement = (Element) autoRoutineNode;
+            String name = autoRoutineElement.getAttribute("name");
+            NodeList eventNodeList = autoRoutineElement.getElementsByTagName("event");
+            for (int j = 0; j < eventNodeList.getLength(); j++)
+            {
+                if (eventNodeList.item(j).getNodeType() != Node.ELEMENT_NODE) { continue; }
+                Element eventBindElement = (Element) eventNodeList.item(j);
+                double startTime = safeParseDouble(eventBindElement.getAttribute("start"));
+                if (Double.isNaN(startTime))
+                {
+                    System.out.println("Invalid event within auto-routine \"" + name + "\", start time \"" + eventBindElement.getAttribute("start") + "\" is not a good double.");
+                    continue;
+                }
+                double length = safeParseDouble(eventBindElement.getAttribute("length"));
+                Object[] params = parseParamList(eventBindElement.getAttribute("parameters"));
+                boolean nonblocking = Boolean.parseBoolean(eventBindElement.getAttribute("nonblocking"));
+                String func = eventBindElement.getTextContent();
+                TRCAutoEvent event = new TRCAutoEvent(startTime, length, params, nonblocking, func);
+                routine.addEvent(event);
+            }
+            TRCAutoManager.registerRoutine(name, routine);
+        }
+    }
+
+    private static Object[] parseParamList(String stringParams)
+    {
+        String[] splitStringParams = stringParams.split(",");
+        Object[] convertedParams = new Object[splitStringParams.length];
+
+        for (int i = 0; i < splitStringParams.length; i++)
+        {
+            String s = splitStringParams[i];
+            try
+            {
+                convertedParams[i] = Integer.parseInt(s);
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    convertedParams[i] = Double.parseDouble(s);
+                }
+                catch (Exception e2)
+                {
+                    convertedParams[i] = s;
+                }
+            }
+        }
+
+        return convertedParams;
+    }
+
+    private static double safeParseDouble(String s)
+    {
+        try
+        {
+            return Double.parseDouble(s);
+        }
+        catch (Exception e)
+        {
+            return Double.NaN;
         }
     }
 }

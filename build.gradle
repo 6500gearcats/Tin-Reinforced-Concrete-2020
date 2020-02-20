@@ -3,7 +3,7 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2020.2.2"
 }
 
-version = "2020.1.0"
+version = "2020.2.0"
 
 dependencies {
     compile wpi.deps.wpilib()
