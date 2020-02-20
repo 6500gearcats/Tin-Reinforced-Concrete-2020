@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import frc.team6500.trc.auto.TRCAutoEvent;
 import frc.team6500.trc.auto.TRCAutoManager;
@@ -243,23 +244,56 @@ public class TRCConfigParser
             String name = autoPathElement.getAttribute("name");
             NodeList translationNodeList = autoPathElement.getElementsByTagName("translation");
 
-            Pose2d startPose = new Pose2d();
-            Pose2d endPose = new Pose2d();
-            ArrayList<Translation2d> translationArray = new ArrayList<Translation2d>();
+            Node startNode = autoPathElement.getElementsByTagName("start").item(0);
+            Element startElement = (Element) startNode;
+            double x = safeParseDouble(startElement.getAttribute("x"));
+            double y = safeParseDouble(startElement.getAttribute("y"));
+            double angle = safeParseDouble(startElement.getAttribute("angle"));
+            if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(angle))
+            {
+                System.out.println("Invalid start within auto-path \"" + name + "\", one of x: " + startElement.getAttribute("x") + ", y: " + startElement.getAttribute("y") + ", or " + startElement.getAttribute("angle") + " is not a good double.");
+                continue;
+            }
+            Pose2d startPose = new Pose2d(x, y, Rotation2d.fromDegrees(angle));
 
+            Node endNode = autoPathElement.getElementsByTagName("end").item(0);
+            Element endElement = (Element) endNode;
+            x = safeParseDouble(endElement.getAttribute("x"));
+            y = safeParseDouble(endElement.getAttribute("y"));
+            angle = safeParseDouble(endElement.getAttribute("angle"));
+            if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(angle))
+            {
+                System.out.println("Invalid end within auto-path \"" + name + "\", one of x: " + endElement.getAttribute("x") + ", y: " + endElement.getAttribute("y") + ", or " + endElement.getAttribute("angle") + " is not a good double.");
+                continue;
+            }
+            Pose2d endPose = new Pose2d(x, y, Rotation2d.fromDegrees(angle));
+
+            ArrayList<Translation2d> translationArray = new ArrayList<Translation2d>();
             for (int j = 0; j < translationNodeList.getLength(); j++)
             {
                 if (translationNodeList.item(j).getNodeType() != Node.ELEMENT_NODE) { continue; }
-                Element translationBindElement = (Element) translationNodeList.item(j);
-                double x = safeParseDouble(translationBindElement.getAttribute("x"));
-                double y = safeParseDouble(translationBindElement.getAttribute("y"));
-                if (Double.isNaN(x) || Double.isNaN(y))
+                Element translationElement = (Element) translationNodeList.item(j);
+
+                int id = -1;
+                try
                 {
-                    System.out.println("Invalid translation within auto-path \"" + name + "\", one of x: " + translationBindElement.getAttribute("x") + " or y: " + translationBindElement.getAttribute("y") + " is not a good double.");
+                    id = Integer.parseInt(translationElement.getAttribute("id"));
+                }
+                catch (Exception e)
+                {
+                    System.out.println("Invalid translation within auto-path \"" + name + "\", does not have an id.");
                     continue;
                 }
 
-                translationArray.add(new Translation2d(x, y));
+                x = safeParseDouble(translationElement.getAttribute("x"));
+                y = safeParseDouble(translationElement.getAttribute("y"));
+                if (Double.isNaN(x) || Double.isNaN(y))
+                {
+                    System.out.println("Invalid translation within auto-path \"" + name + "\", one of x: " + translationElement.getAttribute("x") + " or y: " + translationElement.getAttribute("y") + " is not a good double.");
+                    continue;
+                }
+
+                translationArray.set(id, new Translation2d(x, y));
             }
 
             TRCAutoPath path = new TRCAutoPath(startPose, translationArray.subList(0, translationArray.size()), endPose);
