@@ -141,4 +141,26 @@ public class TRCGyroBase extends GyroBase
 			((ADXRS450_Gyro) installedGyro).close();
 		}
 	}
+
+	public void getRoll() {
+		if (this.internalGyroType == GyroType.NavX)
+		{
+			((AHRS) installedGyro).getRoll();
+		}
+		else
+		{
+			System.out.println("Non-NavX gyro does not support non-yaw axis");
+		}
+	}
+
+	public void getPitch() {
+		if (this.internalGyroType == GyroType.NavX)
+		{
+			((AHRS) installedGyro).getPitch();
+		}
+		else
+		{
+			System.out.println("Non-NavX gyro does not support non-yaw axis");
+		}
+	}
 }
