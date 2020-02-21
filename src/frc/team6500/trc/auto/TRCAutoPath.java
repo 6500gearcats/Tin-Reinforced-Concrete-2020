@@ -24,6 +24,11 @@ public class TRCAutoPath
         return this.startPose;
     }
 
+    public void setStartPose(Pose2d startPose)
+    {
+        this.startPose = startPose;
+    }
+
     public Pose2d getEndPose()
     {
         return this.endPose;

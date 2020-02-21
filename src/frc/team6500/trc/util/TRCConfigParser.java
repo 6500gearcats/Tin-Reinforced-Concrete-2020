@@ -24,10 +24,10 @@ public class TRCConfigParser
     static DocumentBuilder builder;
     static Document doc;
 
-    public static String readInputConfig()
+    public static String readDefaultConfig()
     {
         try {
-            File inFile = new File(Filesystem.getDeployDirectory() + "/input.xml");
+            File inFile = new File(Filesystem.getDeployDirectory() + "/config.xml");
             FileInputStream inFileStream = new FileInputStream(inFile);
             byte[] array = new byte[(int) inFile.length()];
             inFileStream.read(array);
@@ -51,13 +51,14 @@ public class TRCConfigParser
             e.printStackTrace();
         }
 
+        String defaultConfig = readDefaultConfig();
         if (useDefaultInputFile)
         {
-            parseInputConfig(readInputConfig());
+            parseInputConfig(defaultConfig);
         }
         if (useDefaultAutoFile)
         {
-            parseAutoConfig(readInputConfig());
+            parseAutoConfig(defaultConfig);
         }
     }
 
