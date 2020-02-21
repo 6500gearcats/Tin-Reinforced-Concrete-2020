@@ -142,25 +142,27 @@ public class TRCGyroBase extends GyroBase
 		}
 	}
 
-	public void getRoll() {
+	public double getRoll() {
 		if (this.internalGyroType == GyroType.NavX)
 		{
-			((AHRS) installedGyro).getRoll();
+			return ((AHRS) installedGyro).getRoll();
 		}
 		else
 		{
 			System.out.println("Non-NavX gyro does not support non-yaw axis");
+			return Double.NaN;
 		}
 	}
 
-	public void getPitch() {
+	public double getPitch() {
 		if (this.internalGyroType == GyroType.NavX)
 		{
-			((AHRS) installedGyro).getPitch();
+			return ((AHRS) installedGyro).getPitch();
 		}
 		else
 		{
 			System.out.println("Non-NavX gyro does not support non-yaw axis");
+			return Double.NaN;
 		}
 	}
 }
