@@ -24,7 +24,7 @@ public class TRCDriveContinuous
     private static Thread runner;
 
 
-    public static void initializeTRCDriveContinuous(Object driveBase, DriveType driveBaseType, double driveSpeed)
+    public static void initialize(Object driveBase, DriveType driveBaseType, double driveSpeed)
     {
         drive = driveBase;
         driveType = driveBaseType;

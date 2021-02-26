@@ -11,7 +11,7 @@ public class TRCDriveSync
     public static AtomicInteger syncState;
     public static AtomicBoolean isReady = new AtomicBoolean(false);
 
-    public static void initializeTRCDriveSync()
+    public static void initialize()
     {
         isAutonomous = new AtomicBoolean(false);
         syncState = new AtomicInteger(DriveSyncState.Teleop.ordinal());
