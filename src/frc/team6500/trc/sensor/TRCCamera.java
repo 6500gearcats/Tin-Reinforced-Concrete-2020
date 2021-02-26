@@ -1,4 +1,4 @@
-package frc.team6500.trc.sensors;
+package frc.team6500.trc.sensor;
 
 
 // import edu.wpi.cscore.CameraServerJNI;

@@ -1,6 +1,6 @@
 package frc.team6500.trc.auto;
 
-import frc.team6500.trc.systems.TRCPneumaticSystem;
+import frc.team6500.trc.system.TRCPneumaticSystem;
 import frc.team6500.trc.util.TRCTypes.PneumaticSystemActionType;
 
 import edu.wpi.first.wpilibj.Timer;

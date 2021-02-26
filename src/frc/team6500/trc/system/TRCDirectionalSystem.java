@@ -1,4 +1,4 @@
-package frc.team6500.trc.systems;
+package frc.team6500.trc.system;
 
 import java.util.HashMap;
 import java.util.Iterator;

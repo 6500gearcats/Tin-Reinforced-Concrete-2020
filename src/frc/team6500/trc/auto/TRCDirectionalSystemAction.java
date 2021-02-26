@@ -1,6 +1,6 @@
 package frc.team6500.trc.auto;
 
-import frc.team6500.trc.systems.TRCDirectionalSystem;
+import frc.team6500.trc.system.TRCDirectionalSystem;
 import frc.team6500.trc.util.TRCTypes.DirectionalSystemActionType;
 
 import edu.wpi.first.wpilibj.Timer;
